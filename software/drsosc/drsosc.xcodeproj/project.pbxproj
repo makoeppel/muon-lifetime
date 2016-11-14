@@ -1,0 +1,555 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D510F9F91427842C008644A1 /* musbstd.c in Sources */ = {isa = PBXBuildFile; fileRef = D510F9F81427842C008644A1 /* musbstd.c */; };
+		D520B6D91427851E00EFBFBE /* DRS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D520B6D81427851E00EFBFBE /* DRS.cpp */; };
+		D520B6DC1427855B00EFBFBE /* mxml.c in Sources */ = {isa = PBXBuildFile; fileRef = D520B6DA1427855B00EFBFBE /* mxml.c */; };
+		D520B6DD1427855B00EFBFBE /* strlcpy.c in Sources */ = {isa = PBXBuildFile; fileRef = D520B6DB1427855B00EFBFBE /* strlcpy.c */; };
+		D5275EBA1844DAA00083CE6A /* averager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5275EB91844DAA00083CE6A /* averager.cpp */; };
+		D54FC057142777CE00A7A6B0 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D54FC056142777CE00A7A6B0 /* Cocoa.framework */; };
+		D56D7EDE14585114000C7727 /* drsosc.fbp in Resources */ = {isa = PBXBuildFile; fileRef = D56D7EDD14585114000C7727 /* drsosc.fbp */; };
+		D593C9E8142779F4006744E6 /* AboutDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593C9D9142779F4006744E6 /* AboutDialog.cpp */; };
+		D593C9E9142779F4006744E6 /* ConfigDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593C9DA142779F4006744E6 /* ConfigDialog.cpp */; };
+		D593C9EA142779F4006744E6 /* DisplayDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593C9DB142779F4006744E6 /* DisplayDialog.cpp */; };
+		D593C9EB142779F4006744E6 /* DOFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593C9DC142779F4006744E6 /* DOFrame.cpp */; };
+		D593C9EC142779F4006744E6 /* DOScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593C9DD142779F4006744E6 /* DOScreen.cpp */; };
+		D593C9EE142779F4006744E6 /* DRSOsc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593C9DF142779F4006744E6 /* DRSOsc.cpp */; };
+		D593C9EF142779F4006744E6 /* EPThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593C9E0142779F4006744E6 /* EPThread.cpp */; };
+		D593C9F0142779F4006744E6 /* InfoDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593C9E1142779F4006744E6 /* InfoDialog.cpp */; };
+		D593C9F1142779F4006744E6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593C9E2142779F4006744E6 /* main.cpp */; };
+		D593C9F2142779F4006744E6 /* MeasureDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593C9E3142779F4006744E6 /* MeasureDialog.cpp */; };
+		D593C9F3142779F4006744E6 /* Measurement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593C9E4142779F4006744E6 /* Measurement.cpp */; };
+		D593C9F4142779F4006744E6 /* Osci.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593C9E5142779F4006744E6 /* Osci.cpp */; };
+		D593C9F5142779F4006744E6 /* rb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593C9E6142779F4006744E6 /* rb.cpp */; };
+		D593C9F6142779F4006744E6 /* TriggerDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D593C9E7142779F4006744E6 /* TriggerDialog.cpp */; };
+		D5D12D7516691F77000AA21F /* DRSOsc.icns in Resources */ = {isa = PBXBuildFile; fileRef = D5D12D7416691F77000AA21F /* DRSOsc.icns */; };
+		D5E513C3188EB93A00F103E1 /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5E513C2188EB93A00F103E1 /* Icons.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		D510F9EF14277B66008644A1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = drsosc.xcodeproj/Info.plist; sourceTree = SOURCE_ROOT; };
+		D510F9F114277B78008644A1 /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Prefix.pch; path = drsosc.xcodeproj/Prefix.pch; sourceTree = SOURCE_ROOT; };
+		D510F9F81427842C008644A1 /* musbstd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = musbstd.c; path = /drs4eb/software/src/musbstd.c; sourceTree = "<absolute>"; };
+		D520B6D81427851E00EFBFBE /* DRS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DRS.cpp; path = /drs4eb/software/src/DRS.cpp; sourceTree = "<group>"; };
+		D520B6DA1427855B00EFBFBE /* mxml.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mxml.c; path = /drs4eb/software/src/mxml.c; sourceTree = "<absolute>"; };
+		D520B6DB1427855B00EFBFBE /* strlcpy.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = strlcpy.c; path = /drs4eb/software/src/strlcpy.c; sourceTree = "<absolute>"; };
+		D5275EB81844DA8C0083CE6A /* averager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = averager.h; path = /drs4eb/software/include/averager.h; sourceTree = "<group>"; };
+		D5275EB91844DAA00083CE6A /* averager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = averager.cpp; path = /drs4eb/software/src/averager.cpp; sourceTree = "<group>"; };
+		D54FC052142777CE00A7A6B0 /* DRSOsc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DRSOsc.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D54FC056142777CE00A7A6B0 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		D54FC059142777CE00A7A6B0 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		D54FC05A142777CE00A7A6B0 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		D54FC05B142777CE00A7A6B0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D56D7EDD14585114000C7727 /* drsosc.fbp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = drsosc.fbp; sourceTree = "<group>"; };
+		D57C757018B3AD2A002AD084 /* DRSOsc.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = DRSOsc.entitlements; sourceTree = "<group>"; };
+		D593C9D8142779BC006744E6 /* DRS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DRS.h; path = /drs4eb/software/include/DRS.h; sourceTree = "<group>"; };
+		D593C9D9142779F4006744E6 /* AboutDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AboutDialog.cpp; sourceTree = SOURCE_ROOT; };
+		D593C9DA142779F4006744E6 /* ConfigDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfigDialog.cpp; sourceTree = SOURCE_ROOT; };
+		D593C9DB142779F4006744E6 /* DisplayDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DisplayDialog.cpp; sourceTree = SOURCE_ROOT; };
+		D593C9DC142779F4006744E6 /* DOFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DOFrame.cpp; sourceTree = SOURCE_ROOT; };
+		D593C9DD142779F4006744E6 /* DOScreen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DOScreen.cpp; sourceTree = SOURCE_ROOT; };
+		D593C9DF142779F4006744E6 /* DRSOsc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DRSOsc.cpp; sourceTree = SOURCE_ROOT; };
+		D593C9E0142779F4006744E6 /* EPThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EPThread.cpp; sourceTree = SOURCE_ROOT; };
+		D593C9E1142779F4006744E6 /* InfoDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InfoDialog.cpp; sourceTree = SOURCE_ROOT; };
+		D593C9E2142779F4006744E6 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = SOURCE_ROOT; };
+		D593C9E3142779F4006744E6 /* MeasureDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeasureDialog.cpp; sourceTree = SOURCE_ROOT; };
+		D593C9E4142779F4006744E6 /* Measurement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Measurement.cpp; sourceTree = SOURCE_ROOT; };
+		D593C9E5142779F4006744E6 /* Osci.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Osci.cpp; sourceTree = SOURCE_ROOT; };
+		D593C9E6142779F4006744E6 /* rb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rb.cpp; sourceTree = SOURCE_ROOT; };
+		D593C9E7142779F4006744E6 /* TriggerDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TriggerDialog.cpp; sourceTree = SOURCE_ROOT; };
+		D593C9F714277A1F006744E6 /* AboutDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutDialog.h; sourceTree = "<group>"; };
+		D593C9F814277A1F006744E6 /* ConfigDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigDialog.h; sourceTree = "<group>"; };
+		D593C9F914277A1F006744E6 /* DisplayDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayDialog.h; sourceTree = "<group>"; };
+		D593C9FA14277A1F006744E6 /* DOFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DOFrame.h; sourceTree = "<group>"; };
+		D593C9FB14277A1F006744E6 /* DOScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DOScreen.h; sourceTree = "<group>"; };
+		D593C9FC14277A1F006744E6 /* DRSOsc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DRSOsc.h; sourceTree = "<group>"; };
+		D593C9FD14277A1F006744E6 /* DRSOscInc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DRSOscInc.h; sourceTree = "<group>"; };
+		D593C9FE14277A1F006744E6 /* EPThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EPThread.h; sourceTree = "<group>"; };
+		D593C9FF14277A1F006744E6 /* InfoDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoDialog.h; sourceTree = "<group>"; };
+		D593CA0014277A1F006744E6 /* MeasureDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeasureDialog.h; sourceTree = "<group>"; };
+		D593CA0114277A1F006744E6 /* Measurement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Measurement.h; sourceTree = "<group>"; };
+		D593CA0214277A1F006744E6 /* Osci.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Osci.h; sourceTree = "<group>"; };
+		D593CA0314277A1F006744E6 /* rb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rb.h; sourceTree = "<group>"; };
+		D593CA0414277A1F006744E6 /* TriggerDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriggerDialog.h; sourceTree = "<group>"; };
+		D593CA0914277A3C006744E6 /* mxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mxml.h; path = /drs4eb/software/include/mxml.h; sourceTree = "<absolute>"; };
+		D593CA0A14277A3C006744E6 /* strlcpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = strlcpy.h; path = /drs4eb/software/include/strlcpy.h; sourceTree = "<absolute>"; };
+		D593CA0B14277A46006744E6 /* musbstd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = musbstd.h; path = /drs4eb/software/include/musbstd.h; sourceTree = "<absolute>"; };
+		D5D12D7416691F77000AA21F /* DRSOsc.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = DRSOsc.icns; path = /drs4eb/software/drsosc/DRSOsc.icns; sourceTree = "<absolute>"; };
+		D5E513C2188EB93A00F103E1 /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D54FC04F142777CE00A7A6B0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D54FC057142777CE00A7A6B0 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D520B6D6142784FD00EFBFBE /* Source files */ = {
+			isa = PBXGroup;
+			children = (
+				D5275EB91844DAA00083CE6A /* averager.cpp */,
+				D520B6DA1427855B00EFBFBE /* mxml.c */,
+				D520B6DB1427855B00EFBFBE /* strlcpy.c */,
+				D520B6D81427851E00EFBFBE /* DRS.cpp */,
+				D510F9F81427842C008644A1 /* musbstd.c */,
+			);
+			name = "Source files";
+			sourceTree = "<group>";
+		};
+		D54FC047142777CD00A7A6B0 = {
+			isa = PBXGroup;
+			children = (
+				D57C757018B3AD2A002AD084 /* DRSOsc.entitlements */,
+				D5E513C2188EB93A00F103E1 /* Icons.xcassets */,
+				D56D7EDB145850EB000C7727 /* Resource files */,
+				D520B6D6142784FD00EFBFBE /* Source files */,
+				D593C9D7142779A9006744E6 /* Header files */,
+				D54FC05C142777CE00A7A6B0 /* drsosc */,
+				D54FC055142777CE00A7A6B0 /* Frameworks */,
+				D54FC053142777CE00A7A6B0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D54FC053142777CE00A7A6B0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D54FC052142777CE00A7A6B0 /* DRSOsc.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D54FC055142777CE00A7A6B0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D54FC056142777CE00A7A6B0 /* Cocoa.framework */,
+				D54FC058142777CE00A7A6B0 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D54FC058142777CE00A7A6B0 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D54FC059142777CE00A7A6B0 /* AppKit.framework */,
+				D54FC05A142777CE00A7A6B0 /* CoreData.framework */,
+				D54FC05B142777CE00A7A6B0 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		D54FC05C142777CE00A7A6B0 /* drsosc */ = {
+			isa = PBXGroup;
+			children = (
+				D593C9D9142779F4006744E6 /* AboutDialog.cpp */,
+				D593C9DA142779F4006744E6 /* ConfigDialog.cpp */,
+				D593C9DB142779F4006744E6 /* DisplayDialog.cpp */,
+				D593C9DC142779F4006744E6 /* DOFrame.cpp */,
+				D593C9DD142779F4006744E6 /* DOScreen.cpp */,
+				D593C9DF142779F4006744E6 /* DRSOsc.cpp */,
+				D593C9E0142779F4006744E6 /* EPThread.cpp */,
+				D593C9E1142779F4006744E6 /* InfoDialog.cpp */,
+				D593C9E2142779F4006744E6 /* main.cpp */,
+				D593C9E3142779F4006744E6 /* MeasureDialog.cpp */,
+				D593C9E4142779F4006744E6 /* Measurement.cpp */,
+				D593C9E5142779F4006744E6 /* Osci.cpp */,
+				D593C9E6142779F4006744E6 /* rb.cpp */,
+				D593C9E7142779F4006744E6 /* TriggerDialog.cpp */,
+				D54FC05D142777CE00A7A6B0 /* Supporting Files */,
+			);
+			path = drsosc;
+			sourceTree = "<group>";
+		};
+		D54FC05D142777CE00A7A6B0 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D5D12D7416691F77000AA21F /* DRSOsc.icns */,
+				D510F9F114277B78008644A1 /* Prefix.pch */,
+				D510F9EF14277B66008644A1 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D56D7EDB145850EB000C7727 /* Resource files */ = {
+			isa = PBXGroup;
+			children = (
+				D56D7EDD14585114000C7727 /* drsosc.fbp */,
+			);
+			name = "Resource files";
+			sourceTree = "<group>";
+		};
+		D593C9D7142779A9006744E6 /* Header files */ = {
+			isa = PBXGroup;
+			children = (
+				D5275EB81844DA8C0083CE6A /* averager.h */,
+				D593CA0B14277A46006744E6 /* musbstd.h */,
+				D593CA0914277A3C006744E6 /* mxml.h */,
+				D593CA0A14277A3C006744E6 /* strlcpy.h */,
+				D593C9F714277A1F006744E6 /* AboutDialog.h */,
+				D593C9F814277A1F006744E6 /* ConfigDialog.h */,
+				D593C9F914277A1F006744E6 /* DisplayDialog.h */,
+				D593C9FA14277A1F006744E6 /* DOFrame.h */,
+				D593C9FB14277A1F006744E6 /* DOScreen.h */,
+				D593C9FC14277A1F006744E6 /* DRSOsc.h */,
+				D593C9FD14277A1F006744E6 /* DRSOscInc.h */,
+				D593C9FE14277A1F006744E6 /* EPThread.h */,
+				D593C9FF14277A1F006744E6 /* InfoDialog.h */,
+				D593CA0014277A1F006744E6 /* MeasureDialog.h */,
+				D593CA0114277A1F006744E6 /* Measurement.h */,
+				D593CA0214277A1F006744E6 /* Osci.h */,
+				D593CA0314277A1F006744E6 /* rb.h */,
+				D593CA0414277A1F006744E6 /* TriggerDialog.h */,
+				D593C9D8142779BC006744E6 /* DRS.h */,
+			);
+			name = "Header files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D54FC051142777CE00A7A6B0 /* DRSOsc */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D54FC070142777CE00A7A6B0 /* Build configuration list for PBXNativeTarget "DRSOsc" */;
+			buildPhases = (
+				D54FC04E142777CE00A7A6B0 /* Sources */,
+				D54FC04F142777CE00A7A6B0 /* Frameworks */,
+				D54FC050142777CE00A7A6B0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DRSOsc;
+			productName = DRSOsc;
+			productReference = D54FC052142777CE00A7A6B0 /* DRSOsc.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D54FC049142777CD00A7A6B0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0810;
+				ORGANIZATIONNAME = PSI;
+				TargetAttributes = {
+					D54FC051142777CE00A7A6B0 = {
+						DevelopmentTeam = YMN55GDSJB;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 0;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = D54FC04C142777CD00A7A6B0 /* Build configuration list for PBXProject "drsosc" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = D54FC047142777CD00A7A6B0;
+			productRefGroup = D54FC053142777CE00A7A6B0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D54FC051142777CE00A7A6B0 /* DRSOsc */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D54FC050142777CE00A7A6B0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D56D7EDE14585114000C7727 /* drsosc.fbp in Resources */,
+				D5E513C3188EB93A00F103E1 /* Icons.xcassets in Resources */,
+				D5D12D7516691F77000AA21F /* DRSOsc.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D54FC04E142777CE00A7A6B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D593C9E8142779F4006744E6 /* AboutDialog.cpp in Sources */,
+				D593C9E9142779F4006744E6 /* ConfigDialog.cpp in Sources */,
+				D593C9EA142779F4006744E6 /* DisplayDialog.cpp in Sources */,
+				D593C9EB142779F4006744E6 /* DOFrame.cpp in Sources */,
+				D593C9EC142779F4006744E6 /* DOScreen.cpp in Sources */,
+				D593C9EE142779F4006744E6 /* DRSOsc.cpp in Sources */,
+				D593C9EF142779F4006744E6 /* EPThread.cpp in Sources */,
+				D593C9F0142779F4006744E6 /* InfoDialog.cpp in Sources */,
+				D593C9F1142779F4006744E6 /* main.cpp in Sources */,
+				D593C9F2142779F4006744E6 /* MeasureDialog.cpp in Sources */,
+				D5275EBA1844DAA00083CE6A /* averager.cpp in Sources */,
+				D593C9F3142779F4006744E6 /* Measurement.cpp in Sources */,
+				D593C9F4142779F4006744E6 /* Osci.cpp in Sources */,
+				D593C9F5142779F4006744E6 /* rb.cpp in Sources */,
+				D593C9F6142779F4006744E6 /* TriggerDialog.cpp in Sources */,
+				D510F9F91427842C008644A1 /* musbstd.c in Sources */,
+				D520B6D91427851E00EFBFBE /* DRS.cpp in Sources */,
+				D520B6DC1427855B00EFBFBE /* mxml.c in Sources */,
+				D520B6DD1427855B00EFBFBE /* strlcpy.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		D54FC06E142777CE00A7A6B0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		D54FC06F142777CE00A7A6B0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		D54FC071142777CE00A7A6B0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LIBRARY = "compiler-default";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = drsosc.xcodeproj/Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					OS_DARWIN,
+					HAVE_USB,
+					USE_DRS_MUTEX,
+					HAVE_LIBUSB10,
+					__WXOSX_COCOA__,
+					__WXOSX__,
+					__WXMAC__,
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include,
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-static-3.0",
+					"/usr/local/include/wx-3.0",
+					"/usr/local/include/libusb-1.0",
+					/drs4eb/software/include,
+				);
+				INFOPLIST_FILE = drsosc.xcodeproj/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_LDFLAGS = (
+					"-L/usr/local/lib",
+					"/usr/local/lib/libusb-1.0.a",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"/usr/local/lib/libwx_osx_cocoau_xrc-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_html-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_qa-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_adv-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_core-3.0.a",
+					"/usr/local/lib/libwx_baseu_xml-3.0.a",
+					"/usr/local/lib/libwx_baseu_net-3.0.a",
+					"/usr/local/lib/libwx_baseu-3.0.a",
+					"-framework",
+					WebKit,
+					"-lexpat",
+					"-lwxregexu-3.0",
+					"-lwxtiff-3.0",
+					"-lwxjpeg-3.0",
+					"-lwxpng-3.0",
+					"-lz",
+					"-lpthread",
+					"-liconv",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		D54FC072142777CE00A7A6B0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LIBRARY = "compiler-default";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = drsosc.xcodeproj/Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					OS_DARWIN,
+					HAVE_USB,
+					USE_DRS_MUTEX,
+					HAVE_LIBUSB10,
+					__WXOSX_COCOA__,
+					__WXOSX__,
+					__WXMAC__,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include,
+					"/usr/local/lib/wx/include/osx_cocoa-unicode-static-3.0",
+					"/usr/local/include/wx-3.0",
+					"/usr/local/include/libusb-1.0",
+					/drs4eb/software/include,
+				);
+				INFOPLIST_FILE = drsosc.xcodeproj/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_LDFLAGS = (
+					"-L/usr/local/lib",
+					"/usr/local/lib/libusb-1.0.a",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+					"-framework",
+					Cocoa,
+					"-framework",
+					AudioToolbox,
+					"-framework",
+					System,
+					"-framework",
+					OpenGL,
+					"/usr/local/lib/libwx_osx_cocoau_xrc-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_html-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_qa-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_adv-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_core-3.0.a",
+					"/usr/local/lib/libwx_baseu_xml-3.0.a",
+					"/usr/local/lib/libwx_baseu_net-3.0.a",
+					"/usr/local/lib/libwx_baseu-3.0.a",
+					"-framework",
+					WebKit,
+					"-lexpat",
+					"-lwxregexu-3.0",
+					"-lwxtiff-3.0",
+					"-lwxjpeg-3.0",
+					"-lwxpng-3.0",
+					"-lz",
+					"-lpthread",
+					"-liconv",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D54FC04C142777CD00A7A6B0 /* Build configuration list for PBXProject "drsosc" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D54FC06E142777CE00A7A6B0 /* Debug */,
+				D54FC06F142777CE00A7A6B0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D54FC070142777CE00A7A6B0 /* Build configuration list for PBXNativeTarget "DRSOsc" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D54FC071142777CE00A7A6B0 /* Debug */,
+				D54FC072142777CE00A7A6B0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D54FC049142777CD00A7A6B0 /* Project object */;
+}

@@ -1,0 +1,306 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D5438C1718632BB1006A17E5 /* averager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5438C1618632BB1006A17E5 /* averager.cpp */; };
+		D5F6AF8814274CF7003299EE /* DRS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F6AF8714274CF7003299EE /* DRS.cpp */; };
+		D5F6AF8A14274D0F003299EE /* drscl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5F6AF8914274D0F003299EE /* drscl.cpp */; };
+		D5F6AF8D14274D1F003299EE /* mxml.c in Sources */ = {isa = PBXBuildFile; fileRef = D5F6AF8B14274D1F003299EE /* mxml.c */; };
+		D5F6AF8E14274D1F003299EE /* strlcpy.c in Sources */ = {isa = PBXBuildFile; fileRef = D5F6AF8C14274D1F003299EE /* strlcpy.c */; };
+		D5F6AF9014274D2E003299EE /* musbstd.c in Sources */ = {isa = PBXBuildFile; fileRef = D5F6AF8F14274D2E003299EE /* musbstd.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D5446429141E1BB40027AF52 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		D5438C1618632BB1006A17E5 /* averager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = averager.cpp; path = /drs4eb/software/src/averager.cpp; sourceTree = "<group>"; };
+		D5438C1818632BC1006A17E5 /* averager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = averager.h; path = /drs4eb/software/include/averager.h; sourceTree = "<group>"; };
+		D544642B141E1BB40027AF52 /* drscl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = drscl; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5F6AF8514274CE2003299EE /* DRS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DRS.h; path = /drs4eb/software/include/DRS.h; sourceTree = "<group>"; };
+		D5F6AF8714274CF7003299EE /* DRS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DRS.cpp; path = /drs4eb/software/src/DRS.cpp; sourceTree = "<group>"; };
+		D5F6AF8914274D0F003299EE /* drscl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = drscl.cpp; sourceTree = "<group>"; };
+		D5F6AF8B14274D1F003299EE /* mxml.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mxml.c; path = /drs4eb/software/src/mxml.c; sourceTree = "<group>"; };
+		D5F6AF8C14274D1F003299EE /* strlcpy.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = strlcpy.c; path = /drs4eb/software/src/strlcpy.c; sourceTree = "<group>"; };
+		D5F6AF8F14274D2E003299EE /* musbstd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = musbstd.c; path = /drs4eb/software/src/musbstd.c; sourceTree = "<group>"; };
+		D5F6AF9114274D4C003299EE /* mxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mxml.h; path = /drs4eb/software/include/mxml.h; sourceTree = "<group>"; };
+		D5F6AF9214274D4C003299EE /* strlcpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = strlcpy.h; path = /drs4eb/software/include/strlcpy.h; sourceTree = "<group>"; };
+		D5F6AF9314274D61003299EE /* musbstd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = musbstd.h; path = /drs4eb/software/include/musbstd.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D5446428141E1BB40027AF52 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D5446420141E1BB40027AF52 = {
+			isa = PBXGroup;
+			children = (
+				D5F6AF8414274CCC003299EE /* Header Files */,
+				D5F6AF8614274CE8003299EE /* Source Files */,
+				D544642C141E1BB40027AF52 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D544642C141E1BB40027AF52 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D544642B141E1BB40027AF52 /* drscl */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D5F6AF8414274CCC003299EE /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				D5438C1818632BC1006A17E5 /* averager.h */,
+				D5F6AF9314274D61003299EE /* musbstd.h */,
+				D5F6AF9114274D4C003299EE /* mxml.h */,
+				D5F6AF9214274D4C003299EE /* strlcpy.h */,
+				D5F6AF8514274CE2003299EE /* DRS.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		D5F6AF8614274CE8003299EE /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				D5438C1618632BB1006A17E5 /* averager.cpp */,
+				D5F6AF8F14274D2E003299EE /* musbstd.c */,
+				D5F6AF8B14274D1F003299EE /* mxml.c */,
+				D5F6AF8C14274D1F003299EE /* strlcpy.c */,
+				D5F6AF8914274D0F003299EE /* drscl.cpp */,
+				D5F6AF8714274CF7003299EE /* DRS.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D544642A141E1BB40027AF52 /* drscl */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D5446435141E1BB40027AF52 /* Build configuration list for PBXNativeTarget "drscl" */;
+			buildPhases = (
+				D5446427141E1BB40027AF52 /* Sources */,
+				D5446428141E1BB40027AF52 /* Frameworks */,
+				D5446429141E1BB40027AF52 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = drscl;
+			productName = drscl;
+			productReference = D544642B141E1BB40027AF52 /* drscl */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D5446422141E1BB40027AF52 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0810;
+				ORGANIZATIONNAME = PSI;
+			};
+			buildConfigurationList = D5446425141E1BB40027AF52 /* Build configuration list for PBXProject "drscl" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = D5446420141E1BB40027AF52;
+			productRefGroup = D544642C141E1BB40027AF52 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D544642A141E1BB40027AF52 /* drscl */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D5446427141E1BB40027AF52 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D5F6AF8814274CF7003299EE /* DRS.cpp in Sources */,
+				D5F6AF8A14274D0F003299EE /* drscl.cpp in Sources */,
+				D5438C1718632BB1006A17E5 /* averager.cpp in Sources */,
+				D5F6AF8D14274D1F003299EE /* mxml.c in Sources */,
+				D5F6AF8E14274D1F003299EE /* strlcpy.c in Sources */,
+				D5F6AF9014274D2E003299EE /* musbstd.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		D5446433141E1BB40027AF52 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		D5446434141E1BB40027AF52 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		D5446436141E1BB40027AF52 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					OS_LINUX,
+					HAVE_USB,
+					HAVE_LIBUSB10,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include,
+					/drs4eb/software/include,
+				);
+				OTHER_LDFLAGS = (
+					"-L/usr/local/lib",
+					"-lusb-1.0",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+				);
+				PRELINK_LIBS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		D5446437141E1BB40027AF52 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include,
+					/drs4eb/software/include,
+				);
+				OTHER_LDFLAGS = (
+					"-L/usr/local/lib",
+					"-lusb-1.0",
+					"-framework",
+					IOKit,
+					"-framework",
+					Carbon,
+				);
+				PRELINK_LIBS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D5446425141E1BB40027AF52 /* Build configuration list for PBXProject "drscl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D5446433141E1BB40027AF52 /* Debug */,
+				D5446434141E1BB40027AF52 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D5446435141E1BB40027AF52 /* Build configuration list for PBXNativeTarget "drscl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D5446436141E1BB40027AF52 /* Debug */,
+				D5446437141E1BB40027AF52 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D5446422141E1BB40027AF52 /* Project object */;
+}

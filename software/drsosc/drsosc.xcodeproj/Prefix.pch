@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'drsosc' target in the 'drsosc' project
+//
+
+#ifdef __OBJC__
+   #import <Cocoa/Cocoa.h>
+#endif
