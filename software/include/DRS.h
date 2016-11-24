@@ -76,6 +76,7 @@ unsigned int millitime();
 #define REG_EEPROM_PAGE_MEZZ         0x0001A    // DRS4 Mezz
 #define REG_TRG_CONFIG               0x0001C    // DRS4 Eval4
 #define REG_LMK_LSB                  0x0001E    // DRS4 Mezz
+#define REG_READOUT_DELAY            0x00020    // DRS4 Eval5
 #define REG_WARMUP                   0x00020    // DRS4 Mezz
 #define REG_COOLDOWN                 0x00022    // DRS4 Mezz
 #define REG_READ_POINTER             0x00026    // DRS4 Mezz
@@ -640,6 +641,7 @@ public:
    int          GetTriggerDelay() { return fTriggerDelay; }
    double       GetTriggerDelayNs() { return fTriggerDelayNs; }
    int          SetSyncDelay(int ticks);
+   int          SetReadoutDelay(int ticks);
    int          SetTriggerLevel(double value);
    int          SetIndividualTriggerLevel(int channel, double voltage);
    int          SetTriggerPolarity(bool negative);

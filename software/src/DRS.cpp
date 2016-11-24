@@ -2020,6 +2020,8 @@ int DRSBoard::Init()
       SetDecimation(0);
    }
 
+   SetReadoutDelay(30303 * 0); // in ms
+   
    // disable calibration signals
    EnableAcal(0, 0);
    SetCalibTiming(0, 0);
@@ -2313,6 +2315,19 @@ int DRSBoard::SetSyncDelay(int ticks)
       return 1;
    }
 
+   return 0;
+}
+
+/*------------------------------------------------------------------*/
+
+int DRSBoard::SetReadoutDelay(int ticks)
+{
+   if (fBoardType == 9) {
+      Write(T_CTRL, REG_READOUT_DELAY, &ticks, 4);
+      
+      return 1;
+   }
+   
    return 0;
 }
 
@@ -4560,7 +4575,7 @@ double DRSBoard::GetTrueFrequency()
 
 int DRSBoard::GetTime(unsigned int chipIndex, int channelIndex, int tc, float *time, bool tcalibrated, bool rotated)
 {
-   int i, scale, iend;
+   int i, scale;
    double gt0, gt;
 
    /* for DRS2, please use function below */
