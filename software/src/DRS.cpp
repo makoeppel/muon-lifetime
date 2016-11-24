@@ -4593,18 +4593,17 @@ int DRSBoard::GetTime(unsigned int chipIndex, int channelIndex, int tc, float *t
    }
 
    if (channelIndex > 0) {
-      // correct all channels to channel 0 (Daniel's method)
-      iend = tc >= 700 ? 700+1024 : 700;
-      for (i=tc,gt0=0 ; i<iend ; i++)
-         gt0 += fCellDT[chipIndex][0][i % 1024];
+      // correct all channels to cell 0 of channel 0
+      for (i=tc,gt0=0 ; i<1024 ; i++)
+         gt0 += fCellDT[chipIndex][0][i];
       
-      for (i=tc,gt=0 ; i<iend ; i++)
-         gt += fCellDT[chipIndex][channelIndex][i % 1024];
+      for (i=tc,gt=0 ; i<1024 ; i++)
+         gt += fCellDT[chipIndex][channelIndex][i];
       
       for (i=0 ; i<fChannelDepth ; i++)
          time[i] += (float)(gt0 - gt);
    }
-      
+
    return 1;
 }
 
