@@ -228,6 +228,7 @@ architecture arch of drs4_eval5_app is
   signal drs_ctl_readout_mode    : std_logic;
   signal drs_ctl_delay_sel       : std_logic_vector(7 downto 0);
   signal drs_ctl_trigger_transp  : std_logic;
+  signal drs_ctl_readout_delay   : std_logic_vector(31 downto 0);
 
   -- Status registers
   signal drs_stat_busy           : std_logic;
@@ -318,7 +319,7 @@ architecture arch of drs4_eval5_app is
 
   -- state of DRS readout state machine
   type type_drs_readout_state is (init, idle, done, trailer,
-                                  start_running, running, start_readout, wait_vdd, adc_sync,
+                                  start_running, running, start_readout, readout_wait, adc_sync,
                                   chip_readout, wsr_addr, wsr_setup, wsr_strobe, conf_setup, 
                                   conf_strobe, init_rsr);
   signal drs_readout_state        : type_drs_readout_state;
@@ -334,7 +335,7 @@ architecture arch of drs4_eval5_app is
   subtype type_drs_start_timer is integer range 0 to 255;
   signal drs_start_timer          : type_drs_start_timer; 
   signal drs_sample_count         : std_logic_vector(10 downto 0);
-  signal drs_rd_tmp_count         : std_logic_vector(12 downto 0);
+  signal drs_rd_tmp_count         : std_logic_vector(31 downto 0);
   signal drs_stop_cell            : std_logic_vector(9 downto 0);
   signal drs_stop_wsr             : std_logic_vector(7 downto 0);
   signal drs_addr                 : std_logic_vector(3 downto 0);
@@ -365,7 +366,7 @@ architecture arch of drs4_eval5_app is
   signal scaler_reset             : std_logic_vector(5 downto 0);
   signal scaler_ff                : std_logic_vector(5 downto 0);
   signal scaler_ff_reset          : std_logic_vector(5 downto 0);
- 
+  
 begin
   GND   <= '0';
   VCC   <= '1';
@@ -682,6 +683,7 @@ begin
   drs_ctl_delay_sel         <= I_CONTROL_REG_ARR(6)(23 downto 16);
   drs_ctl_trigger_config    <= I_CONTROL_REG_ARR(7)(31 downto 16);
   drs_ctl_eeprom_sector     <= I_CONTROL_REG_ARR(7)(15 downto 0);
+  drs_ctl_readout_delay     <= I_CONTROL_REG_ARR(8)(31 downto 0);
   
   drs_ctl_dmode             <= drs_ctl_config(0);
   drs_ctl_trigger_transp    <= drs_ctl_trigger_config(15);
@@ -712,8 +714,8 @@ begin
   O_STATUS_REG_ARR(9)(31 downto 16) <= drs_serial_number;
   O_STATUS_REG_ARR(9)(15 downto 0)  <= svn_revision;
 
-  -- SVN revision in hex format
-  svn_revision <= X"5553";
+  -- Firmware version, incremented manually
+  svn_revision <= std_logic_vector(to_unsigned(30000, 16));
   
   -- DPRAM for waveform data and EEPROM read/write
   O_DPRAM_CLK    <= drs_readout_clk;
@@ -1383,7 +1385,6 @@ begin
       drs_readout_state        <= init;
       drs_stat_busy            <= '0';
       drs_sample_count         <= (others => '0');
-      drs_rd_tmp_count         <= (others => '0');
       drs_reinit_request       <= '1';
       drs_trig_ff_reset        <= '1';
       drs_trigger_syn          <= '0';
@@ -1519,21 +1520,21 @@ begin
           drs_addr             <= drs_ctl_first_chn;
           o_drs_addr           <= "1101";  -- address write shift register for readout
           drs_sample_count     <= (others => '0');
-          drs_rd_tmp_count     <= (others => '0');
+          drs_rd_tmp_count     <= drs_ctl_readout_delay;
           drs_stop_cell        <= (others => '0');
           drs_stop_wsr         <= (others => '0');
 
           -- reset FIFO
           drs_dpram_reset1     <= '1';
           
-          drs_readout_state    <= wait_vdd;
+          drs_readout_state    <= readout_wait;
           
-        when wait_vdd =>  
+        when readout_wait =>  
           if (drs_reinit_request = '1') then
             drs_readout_state  <= init;
           end if;
         
-          drs_rd_tmp_count     <= drs_rd_tmp_count + 1;
+          drs_rd_tmp_count     <= drs_rd_tmp_count - 1;
           
           -- wait ~120 us for VDD to stabilize
           if (drs_rd_tmp_count(drs_rd_tmp_count'high) = '1') then
