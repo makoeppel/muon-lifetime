@@ -150,7 +150,7 @@ void ConfigDialog::UpdateControls()
       m_cbExtRefclk->SetValue(m_osci->GetBoard(m_board)->GetRefclk() == 1);
 
       if ((m_osci->GetBoard(m_board)->GetBoardType() == 8 || m_osci->GetBoard(m_board)->GetBoardType() == 9)
-           && (!m_osci->IsMultiBoard() || m_board == 0))
+           && !(m_osci->IsMultiBoard() && !m_frame->IsTranspTrigger() && m_board > 0))
          m_frame->EnableTriggerConfig(true);
       else
          m_frame->EnableTriggerConfig(false);
@@ -178,7 +178,7 @@ void ConfigDialog::OnBoardSelect( wxCommandEvent& event )
                                wxT("DRS Oscilloscope"), wxOK | wxICON_STOP, this);
                } else {
                   if (b->GetScaler(5) < 300000) {
-                     str.Printf(wxT("No clock signal connected to CLK IN of board #%d"), i);
+                     str.Printf(wxT("No clock signal connected to CLK IN of board #%d. Keeping internal clock."), m_frame->GetOsci()->GetBoard(i)->GetBoardSerialNumber());
                      wxMessageBox(str, wxT("DRS Oscilloscope"), wxOK | wxICON_STOP, this);
                      m_frame->SetRefclk(i, false);
                   } else {

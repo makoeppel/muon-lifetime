@@ -93,6 +93,7 @@ DOFrame_fb( parent )
    m_chnSection = 0;
    m_multiBoard = false;
    m_splitMode = false;
+   m_transpTrigger = false;
 
    // initialize settings
    m_trgCorr = true;
@@ -357,7 +358,7 @@ void DOFrame::ClearWaveforms()
 
 void DOFrame::UpdateControls()
 {
-   if (m_osci->IsMultiBoard() && m_board > 0) {
+   if (m_osci->IsMultiBoard() && !m_transpTrigger && m_board > 0) {
       m_slTrgLevel->Enable(false);
       m_rbAuto->Enable(false);
       m_rbNormal->Enable(false);
@@ -434,7 +435,7 @@ void DOFrame::UpdateControls()
       if (m_osci->GetCurrentBoard()->GetBoardType() < 8) {
          EnableTriggerConfig(false);
       } else {
-         if (m_osci->IsMultiBoard() && m_board > 0)
+         if (m_osci->IsMultiBoard() && !m_transpTrigger && m_board > 0)
             EnableTriggerConfig(false);
          else
             EnableTriggerConfig(true);
@@ -528,6 +529,9 @@ void DOFrame::SaveConfig()
    
    sprintf(str, "%d", (int)m_splitMode);
    mxml_write_element(xml, "SplitMode", str);
+
+   sprintf(str, "%d", (int)m_transpTrigger);
+   mxml_write_element(xml, "TranspTrig", str);
 
    for (int b=0 ; b<m_osci->GetNumberOfBoards() ; b++) {
       sprintf(str, "Board-%d", m_osci->GetBoard(b)->GetBoardSerialNumber());
@@ -648,6 +652,9 @@ void DOFrame::LoadConfig(char *error, int size)
    
    node = mxml_find_node(osc, "SplitMode");
    if (node) m_splitMode = atoi(mxml_get_value(node)) > 0;
+
+   node = mxml_find_node(osc, "TranspTrig");
+   if (node) m_transpTrigger = atoi(mxml_get_value(node)) > 0;
 
    for (i=idx=0 ; ; i++) {
       PMXML_NODE b = mxml_subnode(osc, i);
@@ -1691,18 +1698,60 @@ void DOFrame::SetTriggerConfig(int id, bool flag)
 
    if (id == ID_TRANS) {
       if (flag) {
-         m_trgConfig[m_board] |= (1<<15);
-         m_trgConfig[m_board] &= ~((1<<4) | (1<<12)); // remove possible EXT trigger
-      } else
-         m_trgConfig[m_board] &= ~(1<<15);
+         // turn on transparent mode for all boards in multi-board mode
+         if (m_multiBoard) {
+            m_transpTrigger = true;
+            for (int i=0 ; i<m_osci->GetNumberOfBoards() ; i++) {
+               m_trgConfig[i] |= (1<<15);
+               m_trgConfig[i] &= ~((1<<4) | (1<<12)); // remove possible EXT trigger
+            }
+         } else {
+            m_transpTrigger = false;
+            m_trgConfig[m_board] |= (1<<15);
+            m_trgConfig[m_board] &= ~((1<<4) | (1<<12)); // remove possible EXT trigger
+         }
+         
+         // if no channel selected, select first one
+         if ((m_trgConfig[m_board] & 0x7FFF) == 0) {
+            m_trgConfig[m_board] |= 1;
+            DOFrame::SelectBoard(m_board);
+         }
+
+      } else {
+         m_transpTrigger = false;
+         if (m_multiBoard) {
+            for (int i=0 ; i<m_osci->GetNumberOfBoards() ; i++) {
+               m_trgConfig[i] &= ~(1<<15);
+            }
+         } else
+            m_trgConfig[m_board] &= ~(1<<15);
+      }
    }
    
    if ((m_trgConfig[m_board] & 0x7FFF) > 0) {
       m_rbSource->Enable(false);
-      m_osci->SetTriggerConfig(m_trgConfig[m_board]);
+      if (m_multiBoard) {
+         int b = m_board;
+         for (int i=0 ; i<m_osci->GetNumberOfBoards() ; i++) {
+            m_board = i;
+            m_osci->SetTriggerConfig(m_trgConfig[i]);
+         }
+         m_board = b;
+      } else {
+         m_osci->SetTriggerConfig(m_trgConfig[m_board]);
+      }
    } else {
       m_rbSource->Enable(true);
-      m_osci->SetTriggerSource(m_trgSource[m_board]);
+      if (m_multiBoard) {
+         int b = m_board;
+         for (int i=0 ; i<m_osci->GetNumberOfBoards() ; i++) {
+            m_board = i;
+            m_osci->SetTriggerSource(m_trgSource[i]);
+         }
+         m_board = b;
+      } else {
+         m_osci->SetTriggerSource(m_trgSource[m_board]);
+      }
    }
 
 }

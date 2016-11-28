@@ -94,6 +94,7 @@ public:
    void SetTriggerConfig(int id, bool flag);
    void SetTriggerSource(int b, int source);
    void SetTriggerPolarity(int b, bool negative);
+   bool IsTranspTrigger() { return m_transpTrigger; }
    void SetStat(bool flag);
    void SetHist(bool flag);
    void SetStatNStat(int n);
@@ -224,6 +225,7 @@ private:
    int            m_chnSection;
    bool           m_multiBoard;
    bool           m_splitMode;
+   bool           m_transpTrigger;
 
    int            m_progress;
 };
