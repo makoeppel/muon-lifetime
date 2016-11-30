@@ -96,10 +96,9 @@ public:
    void      SetTriggerDelay(int delay);
    int       GetTriggerDelay();
    double    GetTriggerDelayNs();
-   void      SetTriggerMode(int mode) { m_trgMode = mode; }
-   int       GetTriggerMode() { return m_trgMode; }
-   void      SetTriggerSource(int source);
-   int       GetTriggerSource() { return m_trgSource[m_board]; }
+   void      SetTriggerMode(int mode) { m_trgMode[m_board] = mode; }
+   int       GetTriggerMode() { return m_trgMode[m_board]; }
+   int       GetTriggerConfig() { return m_trgConfig[m_board]; }
    void      SetTriggerConfig(int tc);
    void      SetRefclk(int board, bool flag);
    void      SetChnOn(int board, int chn, bool flag);
@@ -140,9 +139,9 @@ private:
    int       m_writeSR[MAX_N_BOARDS];
    int       m_boardSerial[MAX_N_BOARDS];
    int       m_waveDepth;
-   int       m_trgMode;
-   int       m_trgSource[MAX_N_BOARDS];
-   bool      m_trgNegative;
+   int       m_trgMode[MAX_N_BOARDS];
+   int       m_trgConfig[MAX_N_BOARDS];
+   bool      m_trgNegative[MAX_N_BOARDS];
    int       m_trgDelay;
    double    m_trgLevel[4];
    bool      m_chnOn[MAX_N_BOARDS][4];

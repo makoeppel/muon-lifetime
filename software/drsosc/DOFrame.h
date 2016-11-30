@@ -51,10 +51,11 @@ public:
    double GetTrgLevel(int i) { return m_trgLevel[m_board][i]; }
    bool IsTrgConfigEnabled() { return m_trgConfigEnabled[m_board]; }
    int GetTrgMode()        { return m_trgMode[m_board]; }
-   int GetTrgSource(int b) { return m_trgSource[b]; }
    int GetTrgPolarity()    { return m_trgNegative[m_board]; }
    double GetTrgDelay()       { return m_trgDelayNs[m_board]; }
    int GetTriggerConfig()  { return m_trgConfig[m_board]; }
+   int GetTriggerConfig(int b)  { return m_trgConfig[b]; }
+   int GetTriggerChannel(int b);
    double GetTrgPosition(int board);
    time_t GetLastTriggerUpdate() { return m_lastTriggerUpdate; }
    bool IsIdle();
@@ -91,8 +92,8 @@ public:
    void ToggleControls();
    void SetMeasurement(int id, bool flag);
    void SetMathDisplay(int id, bool flag);
-   void SetTriggerConfig(int id, bool flag);
-   void SetTriggerSource(int b, int source);
+   void OnSetTriggerConfig(int id, bool flag);
+   void SetTriggerConfig(int id, int config);
    void SetTriggerPolarity(int b, bool negative);
    bool IsTranspTrigger() { return m_transpTrigger; }
    void SetStat(bool flag);
@@ -179,7 +180,6 @@ private:
    double         m_trgLevel[MAX_N_BOARDS][4];
    int            m_trgMode[MAX_N_BOARDS];
    bool           m_trgNegative[MAX_N_BOARDS];
-   int            m_trgSource[MAX_N_BOARDS];
    int            m_trgDelay[MAX_N_BOARDS];
    double         m_trgDelayNs[MAX_N_BOARDS];
    int            m_trgConfig[MAX_N_BOARDS];
@@ -198,8 +198,8 @@ private:
    bool           m_spikeRemoval;
    bool           m_displayScalers;
 
-   wxColour       m_color[5];
-   wxColour       m_pcolor[5];
+   wxColour       m_color[6];
+   wxColour       m_pcolor[6];
 
    int            m_acquisitions;
    wxStopWatch    m_stopWatch;

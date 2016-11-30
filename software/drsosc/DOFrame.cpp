@@ -52,6 +52,7 @@ DOFrame_fb( parent )
    m_color[2] = wxColor(255, 150, 150); // light red
    m_color[3] = wxColor(150, 255, 150); // light green
    m_color[4] = wxColor(170, 170, 170); // grey for ext trigger
+   m_color[5] = wxColor(170, 170, 170); // grey for combinatorial trigger
 
    // colors for printing
    m_pcolor[0] = wxColor(128, 128,   0); // dark yellow
@@ -59,6 +60,7 @@ DOFrame_fb( parent )
    m_pcolor[2] = wxColor(255,   0,   0); // red
    m_pcolor[3] = wxColor(  0, 255,   0); // green
    m_pcolor[4] = wxColor(128, 128, 128); // grey for ext trigger
+   m_pcolor[5] = wxColor(128, 128, 128); // grey for combinatorial trigger
 
    // initialize variables
    m_acqPerSecond = 0;
@@ -104,7 +106,7 @@ DOFrame_fb( parent )
       m_HOffset[b] = 0;
 
       m_trgMode[b] = TM_AUTO;
-      m_trgSource[b] = 0; // CH1
+      m_trgConfig[b] = (1<<0); // CH1
       m_trgLevel[b][0] = m_trgLevel[b][1] = m_trgLevel[b][2] = m_trgLevel[b][3] = 0.25;
       m_trgDelay[b] = 0;
       m_trgDelayNs[b] = 0;
@@ -240,10 +242,7 @@ DOFrame_fb( parent )
       m_trgDelayNs[i] = m_osci->GetTriggerDelayNs();
       m_osci->SetInputRange(m_range[i]);
       m_osci->SetTriggerMode(m_trgMode[i]);
-      if (m_trgConfig[i])
-         m_osci->SetTriggerConfig(m_trgConfig[i]);
-      else
-         m_osci->SetTriggerSource(m_trgSource[i]);
+      m_osci->SetTriggerConfig(m_trgConfig[i]);
       m_osci->SetTriggerLevel(m_trgLevel[0][i]);
       m_osci->SetTriggerPolarity(m_trgNegative[i]);
       m_osci->SetTriggerDelay(m_trgDelay[i]);
@@ -260,7 +259,7 @@ DOFrame_fb( parent )
    if (m_multiBoard) {
       m_osci->SetMultiBoard(true);
       for (int i=1 ; i<m_osci->GetNumberOfBoards() ; i++) {
-         SetTriggerSource(i, 4);       // select external trigger
+         SetTriggerConfig(i, (1<<4));  // select external trigger
          SetTriggerPolarity(i, false); // positive trigger
       }
       m_osci->SelectBoard(m_board);
@@ -363,13 +362,11 @@ void DOFrame::UpdateControls()
       m_rbAuto->Enable(false);
       m_rbNormal->Enable(false);
       m_bpPolarity->Enable(false);
-      m_rbSource->Enable(false);
    } else {
       m_slTrgLevel->Enable(true);
       m_rbAuto->Enable(true);
       m_rbNormal->Enable(true);
       m_bpPolarity->Enable(true);
-      m_rbSource->Enable(true);
       m_btTrgCfg->Enable();
    }
 
@@ -382,10 +379,10 @@ void DOFrame::UpdateControls()
       m_bpPolarity->SetBitmapLabel(wxBitmap(neg_xpm));
    else
       m_bpPolarity->SetBitmapLabel(wxBitmap(pos_xpm));
-   m_rbSource->SetSelection(m_trgSource[m_board]);
+   
+   m_rbSource->Enable(5, false); // disable "X" button
+   m_rbSource->SetSelection(GetTriggerChannel(m_board));
    m_slTrgDelay->SetValue(100-m_trgDelay[m_board]);
-   if (m_trgConfig[m_board])
-      m_rbSource->Enable(false);
    
    m_btCh1->SetValue(m_chnOn[m_board][0]);
    m_btCh2->SetValue(m_chnOn[m_board][1]);
@@ -549,8 +546,6 @@ void DOFrame::SaveConfig()
       mxml_write_element(xml, "TrgMode", str);
       sprintf(str, "%d", m_trgNegative[b]);
       mxml_write_element(xml, "TrgNegative", str);
-      sprintf(str, "%d", m_trgSource[b]);
-      mxml_write_element(xml, "TrgSource", str);
       sprintf(str, "%d", m_trgDelay[b]);
       mxml_write_element(xml, "TrgDelay", str);
       sprintf(str, "%d", m_trgConfig[b]);
@@ -676,8 +671,6 @@ void DOFrame::LoadConfig(char *error, int size)
       if (node) m_trgMode[idx] = atoi(mxml_get_value(node));
       node = mxml_find_node(b, "TrgNegative");
       if (node) m_trgNegative[idx] = atoi(mxml_get_value(node)) == 1;
-      node = mxml_find_node(b, "TrgSource");
-      if (node) m_trgSource[idx] = atoi(mxml_get_value(node));
       node = mxml_find_node(b, "TrgDelay");
       if (node) m_trgDelay[idx] = atoi(mxml_get_value(node));
       node = mxml_find_node(b, "TrgConfig");
@@ -864,7 +857,9 @@ void DOFrame::OnTrgLevelChange(wxScrollEvent& event)
    double f = (-m_slTrgLevel->GetValue()) / 1000.0; // -0.5 ... 0.5
    
    /* convert to voltage according to screen settings */
-   int chn = m_trgSource[m_board];
+   int chn = GetTriggerChannel(m_board);
+   if (chn > 3)
+      chn = 0;
    m_trgLevel[m_board][0] = m_screen->GetScale(m_board, chn)*10*f/1000 + m_screen->GetOffset(m_board, chn);
    m_trgLevel[m_board][1] = m_trgLevel[m_board][0];
    m_trgLevel[m_board][2] = m_trgLevel[m_board][0];
@@ -968,14 +963,12 @@ void DOFrame::OnTrgButton(wxCommandEvent& event)
       else
          m_bpPolarity->SetBitmapLabel(wxBitmap(pos_xpm));
    } else if (event.GetId() == ID_TR_SOURCE) {
-      m_trgSource[m_board] = m_rbSource->GetSelection();
+      m_trgConfig[m_board] = (1<<m_rbSource->GetSelection());
+      m_triggerDialog->SelectBoard(m_board);
    }
 
    m_osci->SetTriggerMode(m_trgMode[m_board]);
-   if (m_trgConfig[m_board])
-      m_osci->SetTriggerConfig(m_trgConfig[m_board]);
-   else
-      m_osci->SetTriggerSource(m_trgSource[m_board]);
+   m_osci->SetTriggerConfig(m_trgConfig[m_board]);
    m_osci->SetTriggerPolarity(m_trgNegative[m_board]);
    m_osci->SetTriggerDelay(m_trgDelay[m_board]);
    m_lastTriggerUpdate = time(NULL);
@@ -984,14 +977,37 @@ void DOFrame::OnTrgButton(wxCommandEvent& event)
 
 /*------------------------------------------------------------------*/
 
-void DOFrame::SetTriggerSource(int b, int source)
+void DOFrame::SetTriggerConfig(int b, int config)
 {
-   m_trgSource[b] = source;
+   m_trgConfig[b] = config;
+   m_rbSource->SetSelection(GetTriggerChannel(b));
    m_osci->SelectBoard(b);
-   m_osci->SetTriggerSource(source);
+   m_osci->SetTriggerConfig(config);
 }
 
 /*------------------------------------------------------------------*/
+
+int DOFrame::GetTriggerChannel(int b)
+{
+   int chn = -1;
+   int cfg = m_trgConfig[b];
+   
+   for (int i=0 ; i<5 ; i++)
+      if (cfg & (1<<i)) {
+         if (chn != -1)
+            return 5; // return 5 if several channels set (display "X" in tigger channel)
+         chn = i;
+         cfg &= ~ (1<<i);
+      }
+   
+   if (chn == -1)
+      return 5; // return 5 if no trigger selected
+   
+   return chn;
+}
+
+/*------------------------------------------------------------------*/
+
 
 void DOFrame::SetTriggerPolarity(int b, bool negative)
 {
@@ -1676,7 +1692,7 @@ void DOFrame::EnableTriggerConfig(bool flag)
 
 /*------------------------------------------------------------------*/
 
-void DOFrame::SetTriggerConfig(int id, bool flag)
+void DOFrame::OnSetTriggerConfig(int id, bool flag)
 {
    int chn;
 
@@ -1729,28 +1745,13 @@ void DOFrame::SetTriggerConfig(int id, bool flag)
    }
    
    if ((m_trgConfig[m_board] & 0x7FFF) > 0) {
-      m_rbSource->Enable(false);
+      m_rbSource->SetSelection(GetTriggerChannel(m_board));
       if (m_multiBoard) {
-         int b = m_board;
          for (int i=0 ; i<m_osci->GetNumberOfBoards() ; i++) {
-            m_board = i;
-            m_osci->SetTriggerConfig(m_trgConfig[i]);
+            m_osci->GetBoard(i)->SetTriggerConfig(m_trgConfig[i]);
          }
-         m_board = b;
       } else {
          m_osci->SetTriggerConfig(m_trgConfig[m_board]);
-      }
-   } else {
-      m_rbSource->Enable(true);
-      if (m_multiBoard) {
-         int b = m_board;
-         for (int i=0 ; i<m_osci->GetNumberOfBoards() ; i++) {
-            m_board = i;
-            m_osci->SetTriggerSource(m_trgSource[i]);
-         }
-         m_board = b;
-      } else {
-         m_osci->SetTriggerSource(m_trgSource[m_board]);
       }
    }
 

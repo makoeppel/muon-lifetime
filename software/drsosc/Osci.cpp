@@ -30,13 +30,13 @@ Osci::Osci(double samplingSpeed, bool mthread)
    m_triggerCell[0] = 0;
    m_writeSR[0] = 0;
    m_waveDepth = 1024;
-   m_trgMode = TM_AUTO;
-   m_trgNegative = false;
    m_trgDelay = 0;
    for (int i=0 ; i<4 ; i++)
       m_trgLevel[i] = 0;
    for (int b=0 ; b<MAX_N_BOARDS ; b++) {
-      m_trgSource[b] = 0;
+      m_trgNegative[b] = false;
+      m_trgMode[b] = TM_AUTO;
+      m_trgConfig[b] = 0;
       m_refClk[b] = false;
       for (int i=0 ; i<4 ; i++)
          m_chnOn[b][i] = false;
@@ -203,12 +203,12 @@ int Osci::ScanBoards()
          b->SetReadoutMode(1);
          b->SetDominoActive(1);
          if (b->GetBoardType() == 5 || b->GetBoardType() == 7 || b->GetBoardType() == 8 || b->GetBoardType() == 9) {
-            b->SetTranspMode(1);     // Evaluation board with build-in trigger
-            b->EnableTrigger(0, 1);  // Enable analog trigger
-            b->SetTriggerSource(0);  // on CH0
+            b->SetTranspMode(1);       // Evaluation board with build-in trigger
+            b->EnableTrigger(0, 1);    // Enable analog trigger
+            b->SetTriggerConfig(1<<0); // on CH0
          } else if (b->GetBoardType() == 6) {
-            b->SetTranspMode(0);     // VPC Mezzanine board
-            b->EnableTrigger(0, 0);  // Disable analog trigger
+            b->SetTranspMode(0);       // VPC Mezzanine board
+            b->EnableTrigger(0, 0);    // Disable analog trigger
          }
          b->SetRefclk(0);
          b->SetFrequency(m_samplingSpeed, true);
@@ -1170,7 +1170,7 @@ void Osci::SetTriggerLevel(double level)
 
 void Osci::SetTriggerPolarity(bool negative)
 {
-   m_trgNegative = negative;
+   m_trgNegative[m_board] = negative;
    
    if (m_drs->GetNumberOfBoards() > 0)
       m_drs->GetBoard(m_board)->SetTriggerPolarity(negative);
@@ -1218,32 +1218,11 @@ double Osci::GetTriggerDelayNs()
 
 /*------------------------------------------------------------------*/
 
-void Osci::SetTriggerSource(int source)
-{
-   m_trgSource[m_board] = source;
-
-   if (m_drs->GetNumberOfBoards() > 0) {
-      if (m_drs->GetBoard(m_board)->GetBoardType() == 8 || m_drs->GetBoard(m_board)->GetBoardType() == 9) {
-         m_drs->GetBoard(m_board)->EnableTrigger(1, 0); // enable trigger
-         m_drs->GetBoard(m_board)->SetTriggerSource(1 << source); // simple or of single channel
-      } else {
-         if (source == 4)
-            m_drs->GetBoard(m_board)->EnableTrigger(1, 0); // external trigger
-         else {
-            m_drs->GetBoard(m_board)->EnableTrigger(0, 1); // analog trigger
-            m_drs->GetBoard(m_board)->SetTriggerSource(source);
-         }
-      }
-   }
-}
-
-/*------------------------------------------------------------------*/
-
 void Osci::SetTriggerConfig(int tc)
 {
    if (m_drs->GetBoard(m_board)->GetBoardType() == 8 || m_drs->GetBoard(m_board)->GetBoardType() == 9) {
       m_drs->GetBoard(m_board)->EnableTrigger(1, 0); // enable trigger
-      m_drs->GetBoard(m_board)->SetTriggerSource(tc);
+      m_drs->GetBoard(m_board)->SetTriggerConfig(tc);
    }
 }
 
@@ -1319,34 +1298,40 @@ unsigned int Osci::GetScaler(int channel)
 
 void Osci::CorrectTriggerPoint(double t)
 {
-   int i, n, min_i;
+   int i, n, min_i, trgChn;
    double min_dt, dt, t0, t1, trigPoint[2*kNumberOfBins];
    float  *pt;
 
    /*---- shift first channel according to trigger point ----*/
    
-   if (m_trgSource[0] == 3 && m_clkOn)
+   for (i=trgChn=0 ; i<5 ; i++)
+      if (m_trgConfig[0] & (1<<i)) {
+         trgChn = i;
+         break;
+      }
+   
+   if (trgChn == 3 && m_clkOn)
       pt = m_timeClk[0];
    else
-      pt = m_time[0][m_trgSource[0]];
+      pt = m_time[0][trgChn];
 
-   if (m_trgSource[0] < 4) {
+   if (trgChn < 4) {
       // search and store all points
       for (i = n = 0 ; i<m_waveDepth-1 ; i++) {
-         if (m_trgNegative) {
-            if (m_waveform[0][m_trgSource[0]][i] >= m_trgLevel[m_trgSource[0]]*1000 &&
-                m_waveform[0][m_trgSource[0]][i+1] < m_trgLevel[m_trgSource[0]]*1000) {
+         if (m_trgNegative[m_board]) {
+            if (m_waveform[0][trgChn][i] >= m_trgLevel[trgChn]*1000 &&
+                m_waveform[0][trgChn][i+1] < m_trgLevel[trgChn]*1000) {
 
                dt = pt[i+1] - pt[i];
-               dt = dt * 1 / (1 + (m_trgLevel[m_trgSource[0]]*1000-m_waveform[0][m_trgSource[0]][i+1])/(m_waveform[0][m_trgSource[0]][i]-m_trgLevel[m_trgSource[0]]*1000));
+               dt = dt * 1 / (1 + (m_trgLevel[trgChn]*1000-m_waveform[0][trgChn][i+1])/(m_waveform[0][trgChn][i]-m_trgLevel[trgChn]*1000));
                trigPoint[n++] = pt[i] + dt;
             }
          } else {
-            if (m_waveform[0][m_trgSource[0]][i] <= m_trgLevel[m_trgSource[0]]*1000 &&
-                m_waveform[0][m_trgSource[0]][i+1] > m_trgLevel[m_trgSource[0]]*1000) {
+            if (m_waveform[0][trgChn][i] <= m_trgLevel[trgChn]*1000 &&
+                m_waveform[0][trgChn][i+1] > m_trgLevel[trgChn]*1000) {
 
                dt = pt[i+1] - pt[i];
-               dt = dt * 1 / (1 + (m_waveform[0][m_trgSource[0]][i+1]-m_trgLevel[m_trgSource[0]]*1000)/(m_trgLevel[m_trgSource[0]]*1000-m_waveform[0][m_trgSource[0]][i]));
+               dt = dt * 1 / (1 + (m_waveform[0][trgChn][i+1]-m_trgLevel[trgChn]*1000)/(m_trgLevel[trgChn]*1000-m_waveform[0][trgChn][i]));
                trigPoint[n++] = pt[i] + dt;
             }
          }

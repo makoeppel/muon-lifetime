@@ -309,13 +309,13 @@ void DOScreen::DrawScopeBottom(wxDC& dc, int board, int x1, int y1, int width, b
       dc.DrawRoundedRectangle(x_start-20-w-20, y1+3, w+10+20, 15, 2);
       dc.DrawText(wxst, x_start-15-w, y1+3);
    } else {
-      if (m_frame->GetTrgSource(board) == 4)
+      if (m_frame->GetTriggerChannel(board) == 4)
          wxst.Printf(wxT("EXT %1.0lf ns"), m_frame->GetTrgDelay());
       else
-         wxst.Printf(wxT("%1.3lf V %1.0lf ns"), m_frame->GetTrgLevel(m_frame->GetTrgSource(board)), m_frame->GetTrgDelay());
+         wxst.Printf(wxT("%1.3lf V %1.0lf ns"), m_frame->GetTrgLevel(m_frame->GetTriggerChannel(board)), m_frame->GetTrgDelay());
       dc.GetTextExtent(wxst, &w, &h);
       dc.SetPen(wxPen(*wxLIGHT_GREY, 1, wxSOLID));
-      dc.SetBrush(m_frame->GetColor(m_frame->GetTrgSource(board), printing));
+      dc.SetBrush(m_frame->GetColor(m_frame->GetTriggerChannel(board), printing));
       dc.DrawRoundedRectangle(x_start-20-w-20, y1+3, w+10+20, 15, 2);
       dc.DrawText(wxst, x_start-15-w, y1+3);
    }
@@ -486,30 +486,21 @@ void DOScreen::DrawWaveforms(wxDC& dc, int wfIndex, bool printing)
    
    // draw trigger level
    for (int channel=0 ; channel<4 ; channel++) {
-      if (!m_frame->GetTriggerConfig() && m_frame->GetTrgSource(m_board) < 4 && channel != m_frame->GetTrgSource(m_board))
-         continue;
-      if (!m_frame->GetTriggerConfig() && m_frame->GetTrgSource(m_board) == 4)
-         continue;
-      
-      double v = (m_frame->GetTrgLevel(channel) - m_offset[m_board][channel])*1000;
-      y = (int) ((m_y1[m_board]+m_y2[m_board])/2-(v/10.0/m_scaleTable[m_scale[m_board][channel]]*(m_y2[m_board]-m_y1[m_board]) + 0.5));
-      
-      p[0] = wxPoint(-8,  0);
-      p[1] = wxPoint( 0, -5);
-      p[2] = wxPoint( 0,  5);
-      if (m_frame->GetTriggerConfig() &&
-          (m_frame->GetTrgLevel(channel) == m_frame->GetTrgLevel((channel+1) % 4) ||
-           m_frame->GetTrgLevel(channel) == m_frame->GetTrgLevel((channel+2) % 4) ||
-           m_frame->GetTrgLevel(channel) == m_frame->GetTrgLevel((channel+3) % 4))) {
-             dc.SetBrush(m_frame->GetColor(4, printing)); // gray if two levels overlap
-             dc.SetPen(m_frame->GetColor(4, printing));
-          } else {
-             dc.SetBrush(m_frame->GetColor(channel, printing));
-             dc.SetPen(m_frame->GetColor(channel, printing));
-          }
-      dc.DrawPolygon(3, p, m_x2[m_board]-2, y);
-      if (time(NULL) - m_frame->GetLastTriggerUpdate() < 2 && !m_frame->IsFirst()) {
-         dc.DrawLine(m_x1[m_board], y, m_x2[m_board]-2, y);
+      if ((m_frame->GetTriggerConfig() & (1 << channel)) ||
+          (m_frame->GetTriggerConfig() & (1 << (channel+8)))) {
+         
+         double v = (m_frame->GetTrgLevel(channel) - m_offset[m_board][channel])*1000;
+         y = (int) ((m_y1[m_board]+m_y2[m_board])/2-(v/10.0/m_scaleTable[m_scale[m_board][channel]]*(m_y2[m_board]-m_y1[m_board]) + 0.5));
+         
+         p[0] = wxPoint(-8,  0);
+         p[1] = wxPoint( 0, -5);
+         p[2] = wxPoint( 0,  5);
+         dc.SetBrush(m_frame->GetColor(channel, printing));
+         dc.SetPen(m_frame->GetColor(channel, printing));
+         dc.DrawPolygon(3, p, m_x2[m_board]-2, y);
+         if (time(NULL) - m_frame->GetLastTriggerUpdate() < 2 && !m_frame->IsFirst()) {
+            dc.DrawLine(m_x1[m_board], y, m_x2[m_board]-2, y);
+         }
       }
    }
    
@@ -520,14 +511,14 @@ void DOScreen::DrawWaveforms(wxDC& dc, int wfIndex, bool printing)
    p[3] = wxPoint( 0, 11);
    p[4] = wxPoint( -1, 11);
    p[5] = wxPoint(-5, 7);
-   dc.SetBrush(m_frame->GetColor(m_frame->GetTrgSource(m_board), printing));
-   dc.SetPen(m_frame->GetColor(m_frame->GetTrgSource(m_board), printing));
+   dc.SetBrush(m_frame->GetColor(m_frame->GetTriggerChannel(m_board), printing));
+   dc.SetPen(m_frame->GetColor(m_frame->GetTriggerChannel(m_board), printing));
    dc.DrawPolygon(6, p, (wxCoord)((m_frame->GetTrgPosition(m_board)-GetScreenOffset(m_board)) / GetScreenSize(m_board) * (m_x2[m_board]-m_x1[m_board]) + m_x1[m_board]),
                   (wxCoord)m_y1[m_board]);
    
    wxst = wxT("T");
    dc.SetPen(wxPen(*wxLIGHT_GREY, 1, wxSOLID));
-   dc.SetBrush(m_frame->GetColor(m_frame->GetTrgSource(m_board), printing));
+   dc.SetBrush(m_frame->GetColor(m_frame->GetTriggerChannel(m_board), printing));
    dc.SetTextForeground(*wxBLACK);
    dc.GetTextExtent(wxst, &w, &h);
    dc.DrawText(wxst, (wxCoord)((m_frame->GetTrgPosition(m_board)-GetScreenOffset(m_board)) / GetScreenSize(m_board) * (m_x2[m_board]-m_x1[m_board]) + m_x1[m_board] - w/2 - 1),

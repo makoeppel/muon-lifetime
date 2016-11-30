@@ -170,7 +170,7 @@ void ConfigDialog::OnBoardSelect( wxCommandEvent& event )
             m_osci->SetMultiBoard(true);
             for (int i=1 ; i<m_osci->GetNumberOfBoards() ; i++) {
                DRSBoard *b = m_frame->GetOsci()->GetBoard(i);
-               m_frame->SetTriggerSource(i, 4);       // select external trigger
+               m_frame->SetTriggerConfig(i, (1<<4));  // select external trigger
                m_frame->SetTriggerPolarity(i, false); // positive trigger
 
                if (b->GetFirmwareVersion() < 21260) {
@@ -377,7 +377,7 @@ void ConfigDialog::OnButtonCalVolt( wxCommandEvent& event )
       int    tcalSource = b->GetTcalSource();
       int    flag1      = b->GetTriggerEnable(0);
       int    flag2      = b->GetTriggerEnable(1);
-      int    trgSource  = b->GetTriggerSource();
+      int    trgConfig  = b->GetTriggerConfig();
       int    trgDelay   = b->GetTriggerDelay();
       double range      = b->GetInputRange();
       int    config     = b->GetReadoutChannelConfig();
@@ -391,7 +391,7 @@ void ConfigDialog::OnButtonCalVolt( wxCommandEvent& event )
       b->EnableTcal(tcalFreq, tcalLevel);
       b->SelectClockSource(tcalSource);
       b->EnableTrigger(flag1, flag2);
-      b->SetTriggerSource(trgSource);
+      b->SetTriggerConfig(trgConfig);
       b->SetTriggerDelayPercent(trgDelay);
       b->SetInputRange(range);
       if (casc == 2)
@@ -437,7 +437,7 @@ void ConfigDialog::OnButtonCalTime( wxCommandEvent& event )
          int    tcalSource = b->GetTcalSource();
          int    flag1      = b->GetTriggerEnable(0);
          int    flag2      = b->GetTriggerEnable(1);
-         int    trgSource  = b->GetTriggerSource();
+         int    trgConfig  = b->GetTriggerConfig();
          int    trgDelay   = b->GetTriggerDelay();
          double range      = b->GetInputRange();
          int    config     = b->GetReadoutChannelConfig();
@@ -461,7 +461,7 @@ void ConfigDialog::OnButtonCalTime( wxCommandEvent& event )
          b->EnableTcal(tcalFreq, tcalLevel);
          b->SelectClockSource(tcalSource);
          b->EnableTrigger(flag1, flag2);
-         b->SetTriggerSource(trgSource);
+         b->SetTriggerConfig(trgConfig);
          b->SetTriggerDelayPercent(trgDelay);
          b->SetInputRange(range);
          b->SetChannelConfig(config, 8, 8);

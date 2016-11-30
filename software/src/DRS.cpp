@@ -474,7 +474,7 @@ DRSBoard::DRSBoard(MUSB_INTERFACE * musb_interface, int usb_slot)
     , fNMultiBuffer(0)
     , fTriggerEnable1(0)
     , fTriggerEnable2(0)
-    , fTriggerSource(0)
+    , fTriggerConfig(0)
     , fTriggerDelay(0)
     , fTriggerDelayNs(0)
     , fSyncDelay(0)
@@ -566,7 +566,7 @@ DRSBoard::DRSBoard(MVME_INTERFACE * mvme_interface, mvme_addr_t base_address, in
 , fNMultiBuffer(0)
 , fTriggerEnable1(0)
 , fTriggerEnable2(0)
-, fTriggerSource(0)
+, fTriggerConfig(0)
 , fTriggerDelay(0)
 , fTriggerDelayNs(0)
 , fSyncDelay(0)
@@ -662,7 +662,7 @@ void DRSBoard::ConstructBoard()
    }
    fTriggerEnable1 = (bits & BIT_ENABLE_TRIGGER1) > 0;
    fTriggerEnable2 = (bits & BIT_ENABLE_TRIGGER2) > 0;
-   fTriggerSource = ((bits & BIT_TR_SOURCE1) > 0) | (((bits & BIT_TR_SOURCE2) > 0) << 1);
+   fTriggerConfig = ((bits & BIT_TR_SOURCE1) > 0) | (((bits & BIT_TR_SOURCE2) > 0) << 1);
    fReadoutMode = (bits & BIT_READOUT_MODE) > 0;
    Read(T_CTRL, &fReadPointer, REG_READ_POINTER, 2);
    fADCClkInvert = (bits & BIT_ADCCLK_INVERT) > 0;
@@ -1979,7 +1979,7 @@ int DRSBoard::Init()
    fReadPointer = 0;
    fTriggerEnable1 = 0;
    fTriggerEnable2 = 0;
-   fTriggerSource = 0;
+   fTriggerConfig = 0;
    fTriggerDelay = 0;
    fTriggerDelayNs = 0;
    fSyncDelay = 0;
@@ -2005,7 +2005,7 @@ int DRSBoard::Init()
    SetDominoMode(fDominoMode);
    SetReadoutMode(fReadoutMode);
    EnableTrigger(fTriggerEnable1, fTriggerEnable2);
-   SetTriggerSource(fTriggerSource);
+   SetTriggerConfig(fTriggerConfig);
    SetTriggerDelayPercent(0);
    SetSyncDelay(fSyncDelay);
    SetDominoActive(fDominoActive);
@@ -2333,19 +2333,19 @@ int DRSBoard::SetReadoutDelay(int ticks)
 
 /*------------------------------------------------------------------*/
 
-int DRSBoard::SetTriggerSource(int source)
+int DRSBoard::SetTriggerConfig(int config)
 {
    short int reg;
 
-   fTriggerSource = source;
+   fTriggerConfig = config;
    if (fBoardType == 5 || fBoardType == 7) {
       // Set trigger source 
       // 0=CH1, 1=CH2, 2=CH3, 3=CH4
-      if (source & 1)
+      if (config & 1)
          fCtrlBits |= BIT_TR_SOURCE1;
       else
          fCtrlBits &= ~BIT_TR_SOURCE1;
-      if (source & 2)
+      if (config & 2)
          fCtrlBits |= BIT_TR_SOURCE2;
       else
          fCtrlBits &= ~BIT_TR_SOURCE2;
@@ -2356,7 +2356,7 @@ int DRSBoard::SetTriggerSource(int source)
       // OR  Bit0=CH1, Bit1=CH2,  Bit2=CH3,  Bit3=CH4,  Bit4=EXT
       // AND Bit8=CH1, Bit9=CH2, Bit10=CH3, Bit11=CH4, Bit12=EXT
       // TRANSP Bit15
-      reg = (unsigned short) source;
+      reg = (unsigned short) config;
       Write(T_CTRL, REG_TRG_CONFIG, &reg, 2);
    }
 

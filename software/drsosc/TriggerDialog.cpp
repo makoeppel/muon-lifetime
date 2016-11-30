@@ -109,7 +109,7 @@ void TriggerDialog::OnButton( wxCommandEvent& event )
          m_cbANDEXT->Enable();
       }
    }
-   m_frame->SetTriggerConfig(event.GetId(), event.IsChecked()); 
+   m_frame->OnSetTriggerConfig(event.GetId(), event.IsChecked());
 }
 
 void TriggerDialog::OnTriggerLevel( wxCommandEvent& event )

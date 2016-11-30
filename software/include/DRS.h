@@ -510,7 +510,7 @@ protected:
    int                  fNMultiBuffer;
    int                  fTriggerEnable1;
    int                  fTriggerEnable2;
-   int                  fTriggerSource;
+   int                  fTriggerConfig;
    int                  fTriggerDelay;
    double               fTriggerDelayNs;
    int                  fSyncDelay;
@@ -645,8 +645,8 @@ public:
    int          SetTriggerLevel(double value);
    int          SetIndividualTriggerLevel(int channel, double voltage);
    int          SetTriggerPolarity(bool negative);
-   int          SetTriggerSource(int source);
-   int          GetTriggerSource() { return fTriggerSource; }
+   int          SetTriggerConfig(int source);
+   int          GetTriggerConfig() { return fTriggerConfig; }
    int          SetDelayedStart(int flag);
    int          SetTranspMode(int flag);
    int          SetStandbyMode(int flag);
