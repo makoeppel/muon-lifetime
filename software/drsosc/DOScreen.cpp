@@ -280,34 +280,36 @@ void DOScreen::DrawScopeBottom(wxDC& dc, int board, int x1, int y1, int width, b
    int x_start = width - w;
    if (m_frame->GetTriggerChannel(board) == 5) {
       int tc = m_frame->GetTriggerConfig();
-      wxString wxst1, wxst2;
-      wxst1.Append((char)wxT('('));
-      for (int i=0 ; i<5 ; i++)
-         if (tc & (1<<i)) {
-            if (i < 4)
-               wxst1.Append((char) (wxT('1'+i)));
-            else
-               wxst1.Append((char) wxT('E'));
-            wxst1.Append((char) wxT('|'));
-         }
-      for (int i=0 ; i<5 ; i++)
-         if (tc & (1<<(i+8))) {
-            if (i < 4)
-               wxst1.Append((char) (wxT('1'+i)));
-            else
-               wxst1.Append((char) wxT('E'));
-            wxst1.Append((char) wxT('&'));
-         }
-      if (wxst1.Length() > 0)
-         wxst1 = wxst1.Left(wxst1.Length()-1);
-      wxst1.Append((char) wxT(')'));
-      wxst2.Printf(wxT(" %1.0lf ns"), m_frame->GetTrgDelay());
-      wxst = wxst1+wxst2;
-      dc.GetTextExtent(wxst, &w, &h);
-      dc.SetPen(wxPen(*wxLIGHT_GREY, 1, wxSOLID));
-      dc.SetBrush(m_frame->GetColor(4, printing));
-      dc.DrawRoundedRectangle(x_start-20-w-20, y1+3, w+10+20, 15, 2);
-      dc.DrawText(wxst, x_start-15-w, y1+3);
+      if (tc > 0) {
+         wxString wxst1, wxst2;
+         wxst1.Append((char)wxT('('));
+         for (int i=0 ; i<5 ; i++)
+            if (tc & (1<<i)) {
+               if (i < 4)
+                  wxst1.Append((char) (wxT('1'+i)));
+               else
+                  wxst1.Append((char) wxT('E'));
+               wxst1.Append((char) wxT('|'));
+            }
+         for (int i=0 ; i<5 ; i++)
+            if (tc & (1<<(i+8))) {
+               if (i < 4)
+                  wxst1.Append((char) (wxT('1'+i)));
+               else
+                  wxst1.Append((char) wxT('E'));
+               wxst1.Append((char) wxT('&'));
+            }
+         if (wxst1.Length() > 0)
+            wxst1 = wxst1.Left(wxst1.Length()-1);
+         wxst1.Append((char) wxT(')'));
+         wxst2.Printf(wxT(" %1.0lf ns"), m_frame->GetTrgDelay());
+         wxst = wxst1+wxst2;
+         dc.GetTextExtent(wxst, &w, &h);
+         dc.SetPen(wxPen(*wxLIGHT_GREY, 1, wxSOLID));
+         dc.SetBrush(m_frame->GetColor(4, printing));
+         dc.DrawRoundedRectangle(x_start-20-w-20, y1+3, w+10+20, 15, 2);
+         dc.DrawText(wxst, x_start-15-w, y1+3);
+      }
    } else {
       if (m_frame->GetTriggerChannel(board) == 4)
          wxst.Printf(wxT("EXT %1.0lf ns"), m_frame->GetTrgDelay());
