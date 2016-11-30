@@ -1744,17 +1744,14 @@ void DOFrame::OnSetTriggerConfig(int id, bool flag)
       }
    }
    
-   if ((m_trgConfig[m_board] & 0x7FFF) > 0) {
-      m_rbSource->SetSelection(GetTriggerChannel(m_board));
-      if (m_multiBoard) {
-         for (int i=0 ; i<m_osci->GetNumberOfBoards() ; i++) {
-            m_osci->GetBoard(i)->SetTriggerConfig(m_trgConfig[i]);
-         }
-      } else {
-         m_osci->SetTriggerConfig(m_trgConfig[m_board]);
+   m_rbSource->SetSelection(GetTriggerChannel(m_board));
+   if (m_multiBoard) {
+      for (int i=0 ; i<m_osci->GetNumberOfBoards() ; i++) {
+         m_osci->GetBoard(i)->SetTriggerConfig(m_trgConfig[i]);
       }
+   } else {
+      m_osci->SetTriggerConfig(m_trgConfig[m_board]);
    }
-
 }
 
 /*------------------------------------------------------------------*/
