@@ -278,8 +278,8 @@ void DOScreen::DrawScopeBottom(wxDC& dc, int board, int x1, int y1, int width, b
    
    // show trigger settings
    int x_start = width - w;
-   int tc = m_frame->GetTriggerConfig();
-   if (tc > 0) {
+   if (m_frame->GetTriggerChannel(board) == 5) {
+      int tc = m_frame->GetTriggerConfig();
       wxString wxst1, wxst2;
       wxst1.Append((char)wxT('('));
       for (int i=0 ; i<5 ; i++)
