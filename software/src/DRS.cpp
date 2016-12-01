@@ -2692,8 +2692,8 @@ int DRSBoard::SetFrequency(double demand, bool wait)
    int triggerEnableSave2 = fTriggerEnable2;
 
    if (fDRSType == 4) {
-      /* allowed range is 100 MHz to 6 GHz */
-      if (demand > 6 || demand < 0.1)
+      /* allowed range is 100 MHz to 8 GHz */
+      if (demand > 8 || demand < 0.1)
          return 0;
 
       if (fBoardType == 6) {
@@ -3036,9 +3036,10 @@ int DRSBoard::RAMTest(int flag)
 
 int DRSBoard::ChipTest()
 {
-   int i, j, t;
-   double freq, old_freq, min, max, mean, std;
+   int    i, j, tc, n_error, test_board;
+   double freq, real_freq, max_freq;
    float  waveform[1024];
+   int    cell_error[9][1024];
 
    Init();
    SetChannelConfig(0, 8, 8);
@@ -3047,9 +3048,8 @@ int DRSBoard::ChipTest()
    SetDominoActive(1);
    SetTranspMode(0);
    EnableTrigger(0, 0);
-   EnableTcal(1, 0);
+   EnableTcal(0);
    SelectClockSource(0);
-   EnableAcal(1, 0);
 
    /* test 1 GHz */
    SetFrequency(1, true);
@@ -3060,18 +3060,40 @@ int DRSBoard::ChipTest()
       return 0;
    }
 
-   /* test up to 6 GHz */
-   for (freq = 5 ; freq < 6 ; freq += 0.1) {
+   /* test up to 8 GHz */
+   for (freq = 5 ; freq < 8 ; freq += 0.1) {
       SetFrequency(freq, false);
+      ReadFrequency(0, &real_freq);
       Sleep(10);
       if (!(GetStatusReg() & BIT_PLL_LOCKED0)) {
-         printf("Max. frequency is %1.1lf GHz\n", old_freq);
+         printf("Maximum sampling frequency is %1.1lf GHz\n", max_freq);
          break;
       }
-      ReadFrequency(0, &old_freq);
+      max_freq = real_freq;
    }
 
+   memset(cell_error, 0, sizeof(cell_error));
+   
+   /* check for test board (odd channels connected to voltage source) */
+   test_board = 1;
+   EnableAcal(1, 0.5);
+   SetFrequency(5, true);
+   Sleep(10);
+   SoftTrigger();
+   while (IsBusy());
+   TransferWaves(0, 8);
+   tc = GetStopCell(0);
+   GetWave(0, 8, waveform, false, tc, 0, false);
+   for (i=j=0 ; i<1024 ; i++)
+      if (waveform[i] < -100)
+         j++;
+   if (j > 800) {
+      test_board = 0;
+      printf("Non-test board found, only even channels are tested.\n");
+   }
+   
    /* read and check at 0 calibration voltage */
+   EnableAcal(1, 0);
    SetFrequency(5, true);
    Sleep(10);
    SoftTrigger();
@@ -3079,17 +3101,20 @@ int DRSBoard::ChipTest()
    TransferWaves(0, 8);
 
    for (i=0 ; i<8 ; i++) {
-      t = GetStopCell(0);
-      GetWave(0, i, waveform, false, t, 0, false);
+      tc = GetStopCell(0);
+      GetWave(0, i, waveform, false, tc, 0, false);
       for (j=0 ; j<1024; j++)
          if (waveform[j] < -100 || waveform[j] > 100) {
             if (j<5) {
                /* skip this cells */
             } else {
-               printf("Cell error on channel %d, cell %d: %1.1lf mV instead 0 mV\n", i, j, waveform[j]);
-               return 0;
+               printf("Cell error on channel %d, cell %d: %1.1lf mV instead 0 mV\n",
+                      i, (j+tc)%1024, waveform[j]);
+               cell_error[i][(j+tc)%1024]++;
             }
          }
+      if (!test_board)
+         i++; // only even channels
    }
 
    /* read and check at +0.5V calibration voltage */
@@ -3100,17 +3125,20 @@ int DRSBoard::ChipTest()
    TransferWaves(0, 8);
 
    for (i=0 ; i<8 ; i++) {
-      t = GetStopCell(0);
-      GetWave(0, i, waveform, false, t, 0, false);
+      tc = GetStopCell(0);
+      GetWave(0, i, waveform, false, tc, 0, false);
       for (j=0 ; j<1024; j++)
          if (waveform[j] < 350) {
             if (j<5) {
                /* skip this cell */
             } else {
-               printf("Cell error on channel %d, cell %d: %1.1lf mV instead 400 mV\n", i, j, waveform[j]);
-               return 0;
+               printf("Cell error on channel %d, cell %d: %1.1lf mV instead 400 mV\n",
+                      i, (j+tc)%1024, waveform[j]);
+               cell_error[i][(j+tc)%1024]++;
             }
          }
+      if (!test_board)
+         i++; // only even channels
    }
 
    /* read and check at -0.5V calibration voltage */
@@ -3122,45 +3150,34 @@ int DRSBoard::ChipTest()
    TransferWaves(0, 8);
 
    for (i=0 ; i<8 ; i++) {
-      t = GetStopCell(0);
-      GetWave(0, i, waveform, false, t, 0, false);
+      tc = GetStopCell(0);
+      GetWave(0, i, waveform, false, tc, 0, false);
       for (j=0 ; j<1024; j++)
          if (waveform[j] > -350) {
             if (j<5) {
                /* skip this cell */
             } else {
-               printf("Cell error on channel %d, cell %d: %1.1lf mV instead -400mV\n", i, j, waveform[j]);
-               return 0;
+               printf("Cell error on channel %d, cell %d: %1.1lf mV instead -400mV\n",
+                      i, (j+tc)%1024, waveform[j]);
+               cell_error[i][(j+tc)%1024]++;
             }
          }
+      if (!test_board)
+         i++; // only even channels
    }
 
-   /* check clock channel */
-   GetWave(0, 8, waveform, false, 0, 0);
-   min = max = mean = std = 0;
-   for (j=0 ; j<1024 ; j++) {
-      if (waveform[j] > max)
-         max = waveform[j];
-      if (waveform[j] < min)
-         min = waveform[j];
-      mean += waveform[j];
-   }
-   mean /= 1024.0;
-   for (j=0 ; j<1024 ; j++)
-      std += (waveform[j] - mean) * (waveform[j] - mean);
-   std = sqrt(std/1024);
-
-   if (max - min < 400) {
-      printf("Error on clock channel amplitude: %1.1lf mV\n", max-min);
-      return 0;
-   }
-
-   if (std < 100 || std > 300) {
-      printf("Error on clock channel Std: %1.1lf mV\n", std);
-      return 0;
-   }
-
-   return 1;
+   /* count errors */
+   for (i=n_error=0 ; i<9 ; i++)
+      for (j=0 ; j<1024 ; j++)
+      if (cell_error[i][j])
+         n_error++;
+   
+   if (n_error)
+      printf("\n=== Chip has %d cells with errors ===\n", n_error);
+   else
+      printf("\n*** Chip test successfully finished ***\n");
+   
+   return n_error;
 }
 
 /*------------------------------------------------------------------*/

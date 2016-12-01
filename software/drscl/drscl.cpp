@@ -1333,11 +1333,7 @@ void cmd_loop()
          else {
             puts("Press 'q' to quit, any other key to repeat test.\n");
             do {
-               if (b->ChipTest())
-                  puts("Chip test successfully finished");
-               else
-                  puts("\007Chip Error!");
-
+               b->ChipTest();
                b->SetStandbyMode(1);
                for (i=0 ; i<8 ; i++)
                   b->SetDAC(i, 0);
