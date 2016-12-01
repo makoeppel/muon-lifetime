@@ -29,17 +29,17 @@
 
 /* Begin PBXFileReference section */
 		D544642B141E1BB40027AF52 /* drs_exam */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = drs_exam; sourceTree = BUILT_PRODUCTS_DIR; };
-		D563FEB51863514900F76DF2 /* averager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = averager.cpp; path = ../averager.cpp; sourceTree = "<group>"; };
-		D563FEB71863515400F76DF2 /* averager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = averager.h; path = ../averager.h; sourceTree = "<group>"; };
-		D5F6AF8514274CE2003299EE /* DRS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DRS.h; path = ../DRS.h; sourceTree = "<group>"; };
-		D5F6AF8714274CF7003299EE /* DRS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DRS.cpp; path = ../DRS.cpp; sourceTree = "<group>"; };
+		D563FEB51863514900F76DF2 /* averager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = averager.cpp; path = /drs4eb/software/src/averager.cpp; sourceTree = "<group>"; };
+		D563FEB71863515400F76DF2 /* averager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = averager.h; path = /drs4eb/software/include/averager.h; sourceTree = "<group>"; };
+		D5F6AF8514274CE2003299EE /* DRS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DRS.h; path = /drs4eb/software/include/DRS.h; sourceTree = "<group>"; };
+		D5F6AF8714274CF7003299EE /* DRS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DRS.cpp; path = /drs4eb/software/src/DRS.cpp; sourceTree = "<group>"; };
 		D5F6AF8914274D0F003299EE /* drs_exam.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = drs_exam.cpp; sourceTree = "<group>"; };
-		D5F6AF8B14274D1F003299EE /* mxml.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mxml.c; path = ../../../../../mxml/mxml.c; sourceTree = "<group>"; };
-		D5F6AF8C14274D1F003299EE /* strlcpy.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = strlcpy.c; path = ../../../../../mxml/strlcpy.c; sourceTree = "<group>"; };
-		D5F6AF8F14274D2E003299EE /* musbstd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = musbstd.c; path = ../../../../../midas/drivers/usb/musbstd.c; sourceTree = "<group>"; };
-		D5F6AF9114274D4C003299EE /* mxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mxml.h; path = ../../../../../mxml/mxml.h; sourceTree = "<group>"; };
-		D5F6AF9214274D4C003299EE /* strlcpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = strlcpy.h; path = ../../../../../mxml/strlcpy.h; sourceTree = "<group>"; };
-		D5F6AF9314274D61003299EE /* musbstd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = musbstd.h; path = ../../../../../midas/include/musbstd.h; sourceTree = "<group>"; };
+		D5F6AF8B14274D1F003299EE /* mxml.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mxml.c; path = /drs4eb/software/src/mxml.c; sourceTree = "<group>"; };
+		D5F6AF8C14274D1F003299EE /* strlcpy.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = strlcpy.c; path = /drs4eb/software/src/strlcpy.c; sourceTree = "<group>"; };
+		D5F6AF8F14274D2E003299EE /* musbstd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = musbstd.c; path = /drs4eb/software/src/musbstd.c; sourceTree = "<group>"; };
+		D5F6AF9114274D4C003299EE /* mxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mxml.h; path = /drs4eb/software/include/mxml.h; sourceTree = "<group>"; };
+		D5F6AF9214274D4C003299EE /* strlcpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = strlcpy.h; path = /drs4eb/software/include/strlcpy.h; sourceTree = "<group>"; };
+		D5F6AF9314274D61003299EE /* musbstd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = musbstd.h; path = /drs4eb/software/include/musbstd.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -231,11 +231,9 @@
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				HEADER_SEARCH_PATHS = (
-					/mxml,
-					/midas/include,
-					../,
-					/usr/local/include,
-					"/usr/local/include/libusb-1.0",
+					/drs4eb/software/include,
+					/usr/local/inlucde,
+					/opt/local/include,
 				);
 				OTHER_LDFLAGS = (
 					"-L/usr/local/lib",
@@ -255,11 +253,9 @@
 			buildSettings = {
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				HEADER_SEARCH_PATHS = (
-					/mxml,
-					/midas/include,
-					../,
-					/usr/local/include,
-					"/usr/local/include/libusb-1.0",
+					/drs4eb/software/include,
+					/usr/local/inlucde,
+					/opt/local/include,
 				);
 				OTHER_LDFLAGS = (
 					"-L/usr/local/lib",

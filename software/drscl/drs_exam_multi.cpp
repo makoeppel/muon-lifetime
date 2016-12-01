@@ -105,13 +105,13 @@ int main()
       if (i == 0) {
          /* master board: enable hardware trigger on CH1 at 50 mV positive edge */
          b->SetTranspMode(1);
-         b->SetTriggerSource(1<<0);        // set CH1 as source
+         b->SetTriggerConfig(1<<0);        // set CH1 as source
          b->SetTriggerLevel(0.05);         // 50 mV
          b->SetTriggerPolarity(false);     // positive edge
          b->SetTriggerDelayNs(0);          // zero ns trigger delay
       } else {
          /* slave boards: enable hardware trigger on Trigger IN */
-         b->SetTriggerSource(1<<4);        // set Trigger IN as source
+         b->SetTriggerConfig(1<<4);        // set Trigger IN as source
          b->SetTriggerPolarity(false);     // positive edge
       }
    }

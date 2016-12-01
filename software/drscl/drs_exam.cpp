@@ -88,10 +88,10 @@ int main()
    /* use following lines to enable hardware trigger on CH1 at 50 mV positive edge */
    if (b->GetBoardType() >= 8) {        // Evaluaiton Board V4&5
       b->EnableTrigger(1, 0);           // enable hardware trigger
-      b->SetTriggerSource(1<<0);        // set CH1 as source
+      b->SetTriggerConfig(1<<0);        // set CH1 as source
    } else if (b->GetBoardType() == 7) { // Evaluation Board V3
       b->EnableTrigger(0, 1);           // lemo off, analog trigger on
-      b->SetTriggerSource(0);           // use CH1 as source
+      b->SetTriggerConfig(1);           // use CH1 as source
    }
    b->SetTriggerLevel(0.05);            // 0.05 V
    b->SetTriggerPolarity(false);        // positive edge
