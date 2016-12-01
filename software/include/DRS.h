@@ -641,7 +641,7 @@ public:
    int          GetTriggerDelay() { return fTriggerDelay; }
    double       GetTriggerDelayNs() { return fTriggerDelayNs; }
    int          SetSyncDelay(int ticks);
-   int          SetReadoutDelay(int ticks);
+   int          SetReadoutDelay(float milliseconds);
    int          SetTriggerLevel(double value);
    int          SetIndividualTriggerLevel(int channel, double voltage);
    int          SetTriggerPolarity(bool negative);

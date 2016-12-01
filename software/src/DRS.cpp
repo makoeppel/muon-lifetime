@@ -2311,23 +2311,20 @@ int DRSBoard::SetSyncDelay(int ticks)
       Read(T_CTRL, &reg, REG_TRG_DELAY, 2);
       reg = (reg & 0xFF) | (ticks << 8);
       Write(T_CTRL, REG_TRG_DELAY, &reg, 2);
-
       return 1;
    }
-
    return 0;
 }
 
 /*------------------------------------------------------------------*/
 
-int DRSBoard::SetReadoutDelay(int ticks)
+int DRSBoard::SetReadoutDelay(float milliseconds)
 {
+   unsigned int ticks = milliseconds * 30303;
    if (fBoardType == 9) {
       Write(T_CTRL, REG_READOUT_DELAY, &ticks, 4);
-      
       return 1;
    }
-   
    return 0;
 }
 
@@ -3036,9 +3033,10 @@ int DRSBoard::RAMTest(int flag)
 
 int DRSBoard::ChipTest()
 {
-   int    i, j, tc, n_error, test_board;
+   int    i, j, tc, n_error, test_board, t;
    double freq, real_freq, max_freq;
-   float  waveform[1024];
+   float  waveform[1024], wf0[9][1024], wf1[9][1024];
+   double lc[9][1024];
    int    cell_error[9][1024];
 
    Init();
@@ -3051,6 +3049,8 @@ int DRSBoard::ChipTest()
    EnableTcal(0);
    SelectClockSource(0);
 
+   printf("Chip test at %1.1lf deg. C\n", GetTemperature());
+   
    /* test 1 GHz */
    SetFrequency(1, true);
    StartDomino();
@@ -3089,7 +3089,7 @@ int DRSBoard::ChipTest()
          j++;
    if (j > 800) {
       test_board = 0;
-      printf("Non-test board found, only even channels are tested.\n");
+      printf("Non-test board found, only even channels are tested\n");
    }
    
    /* read and check at 0 calibration voltage */
@@ -3100,7 +3100,7 @@ int DRSBoard::ChipTest()
    while (IsBusy());
    TransferWaves(0, 8);
 
-   for (i=0 ; i<8 ; i++) {
+   for (i=0 ; i<9 ; i++) {
       tc = GetStopCell(0);
       GetWave(0, i, waveform, false, tc, 0, false);
       for (j=0 ; j<1024; j++)
@@ -3113,8 +3113,11 @@ int DRSBoard::ChipTest()
                cell_error[i][(j+tc)%1024]++;
             }
          }
-      if (!test_board)
-         i++; // only even channels
+      if (!test_board) {
+         i++; // only channels 0, 2, 4, 6
+         if (i == 7)
+            break;
+      }
    }
 
    /* read and check at +0.5V calibration voltage */
@@ -3124,7 +3127,7 @@ int DRSBoard::ChipTest()
    while (IsBusy());
    TransferWaves(0, 8);
 
-   for (i=0 ; i<8 ; i++) {
+   for (i=0 ; i<9 ; i++) {
       tc = GetStopCell(0);
       GetWave(0, i, waveform, false, tc, 0, false);
       for (j=0 ; j<1024; j++)
@@ -3137,8 +3140,11 @@ int DRSBoard::ChipTest()
                cell_error[i][(j+tc)%1024]++;
             }
          }
-      if (!test_board)
-         i++; // only even channels
+      if (!test_board) {
+         i++; // only channels 0, 2, 4, 6
+         if (i == 7)
+            break;
+      }
    }
 
    /* read and check at -0.5V calibration voltage */
@@ -3149,7 +3155,7 @@ int DRSBoard::ChipTest()
    while (IsBusy());
    TransferWaves(0, 8);
 
-   for (i=0 ; i<8 ; i++) {
+   for (i=0 ; i<9 ; i++) {
       tc = GetStopCell(0);
       GetWave(0, i, waveform, false, tc, 0, false);
       for (j=0 ; j<1024; j++)
@@ -3162,10 +3168,89 @@ int DRSBoard::ChipTest()
                cell_error[i][(j+tc)%1024]++;
             }
          }
-      if (!test_board)
-         i++; // only even channels
+      if (!test_board) {
+         i++; // only channels 0, 2, 4, 6
+         if (i == 7)
+            break;
+      }
    }
 
+   /* measure leakage current in all cells */
+   if (GetFirmwareVersion() < 30000)
+      printf("Please upgrade firmware to measure leakage current\n");
+   else {
+      memset(lc, 0, sizeof(lc));
+      EnableAcal(1, 0.5);
+      
+      // measure at t=0
+      SetReadoutDelay(0);
+      StartDomino();
+      Sleep(10);
+      SoftTrigger();
+      while (IsBusy());
+      TransferWaves(0, 8);
+      tc = GetStopCell(0);
+      for (i=0 ; i<9 ; i++)
+         GetWave(0, i, wf0[i], false, tc, 0, true);
+      
+      for (t=1 ; t<150 ; t+=1) {
+         SetReadoutDelay(t);
+         StartDomino();
+         Sleep(10);
+         SoftTrigger();
+         while (IsBusy());
+         TransferWaves(0, 8);
+         
+         tc = GetStopCell(0);
+         for (i=0 ; i<9 ; i++)
+            GetWave(0, i, wf1[i], false, tc, 0, true);
+         
+         // check if more than 500 mV lost
+         for (i=0 ; i<9 ; i++)
+            for (j=0 ; j<1024 ; j++) {
+               if (wf1[i][j] < 0 && lc[i][j] == 0) {
+                  lc[i][j] = 0.15 * (wf0[i][j]-wf1[i][j])/t; // lc = C * delta_u / delta_t in [pA]
+               }
+            }
+         
+         // check if all cells drained
+         if (test_board) {
+            for (i=0 ; i<9 ; i++)
+               for (j=0 ; j<1024 ; j++)
+                  if (lc[i][j] == 0)
+                     break;
+            
+            if (i == 9 && j == 1024)
+               break;
+         } else {
+            for (i=0 ; i<8 ; i+=2)
+               for (j=0 ; j<1024 ; j++)
+                  if (lc[i][j] == 0)
+                     break;
+            
+            if (i == 8 && j == 1024)
+               break;
+         }
+      }
+      
+      // calculate statistics over leakage current
+      double sum = 0, lcmax = 0;
+      int n = 0, imax, jmax;
+      
+      for (i=0 ; i<9 ; i++)
+         for (j=0 ; j<1024 ; j++)
+            if (lc[i][j] > 0) {
+               sum += lc[i][j];
+               n++;
+               if (lc[i][j] > lcmax) {
+                  lcmax = lc[i][j];
+                  imax = i;
+                  jmax = j;
+               }
+            }
+      printf("Leakage current [pA]: %1.1lf average, %1.1lf max [%d/%d]\n", sum/n, lcmax, imax, jmax);
+   }
+   
    /* count errors */
    for (i=n_error=0 ; i<9 ; i++)
       for (j=0 ; j<1024 ; j++)
