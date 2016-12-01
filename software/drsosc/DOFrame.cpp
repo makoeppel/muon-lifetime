@@ -1738,6 +1738,8 @@ void DOFrame::OnSetTriggerConfig(int id, bool flag)
          if (m_multiBoard) {
             for (int i=0 ; i<m_osci->GetNumberOfBoards() ; i++) {
                m_trgConfig[i] &= ~(1<<15);
+               if (i > 0)
+                  m_trgConfig[i] = (1 << 4); // switch back to EXT trigger
             }
          } else
             m_trgConfig[m_board] &= ~(1<<15);

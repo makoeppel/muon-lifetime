@@ -56,32 +56,32 @@ void TriggerDialog::UpdateControls()
       m_tbLevel2->Enable();
       m_tbLevel3->Enable();
       m_tbLevel4->Enable();
-
-      int tc = m_frame->GetTriggerConfig();
-      m_cbOR1->SetValue((tc & (1<<0))>0);
-      m_cbOR2->SetValue((tc & (1<<1))>0);
-      m_cbOR3->SetValue((tc & (1<<2))>0);
-      m_cbOR4->SetValue((tc & (1<<3))>0);
-      m_cbOREXT->SetValue((tc & (1<<4))>0);
-      
-      m_cbAND1->SetValue((tc & (1<<8))>0);
-      m_cbAND2->SetValue((tc & (1<<9))>0);
-      m_cbAND3->SetValue((tc & (1<<10))>0);
-      m_cbAND4->SetValue((tc & (1<<11))>0);
-      m_cbANDEXT->SetValue((tc & (1<<12))>0);
-      
-      m_cbTrans->SetValue((tc & (1<<15))>0);
-      
-      wxString s;
-      s.Printf(wxT("%1.3lf"), m_frame->GetTrgLevel(0));
-      m_tbLevel1->SetValue(s);
-      s.Printf(wxT("%1.3lf"), m_frame->GetTrgLevel(1));
-      m_tbLevel2->SetValue(s);
-      s.Printf(wxT("%1.3lf"), m_frame->GetTrgLevel(2));
-      m_tbLevel3->SetValue(s);
-      s.Printf(wxT("%1.3lf"), m_frame->GetTrgLevel(3));
-      m_tbLevel4->SetValue(s);
    }
+
+   int tc = m_frame->GetTriggerConfig();
+   m_cbOR1->SetValue((tc & (1<<0))>0);
+   m_cbOR2->SetValue((tc & (1<<1))>0);
+   m_cbOR3->SetValue((tc & (1<<2))>0);
+   m_cbOR4->SetValue((tc & (1<<3))>0);
+   m_cbOREXT->SetValue((tc & (1<<4))>0);
+   
+   m_cbAND1->SetValue((tc & (1<<8))>0);
+   m_cbAND2->SetValue((tc & (1<<9))>0);
+   m_cbAND3->SetValue((tc & (1<<10))>0);
+   m_cbAND4->SetValue((tc & (1<<11))>0);
+   m_cbANDEXT->SetValue((tc & (1<<12))>0);
+   
+   m_cbTrans->SetValue((tc & (1<<15))>0);
+   
+   wxString s;
+   s.Printf(wxT("%1.3lf"), m_frame->GetTrgLevel(0));
+   m_tbLevel1->SetValue(s);
+   s.Printf(wxT("%1.3lf"), m_frame->GetTrgLevel(1));
+   m_tbLevel2->SetValue(s);
+   s.Printf(wxT("%1.3lf"), m_frame->GetTrgLevel(2));
+   m_tbLevel3->SetValue(s);
+   s.Printf(wxT("%1.3lf"), m_frame->GetTrgLevel(3));
+   m_tbLevel4->SetValue(s);
 }
 
 void TriggerDialog::OnClose( wxCommandEvent& event )
@@ -98,15 +98,6 @@ void TriggerDialog::OnButton( wxCommandEvent& event )
                       wxT("DRS Oscilloscope"), wxOK | wxICON_STOP, this);
          m_cbTrans->SetValue(false);
          return;
-      }
-      if (event.IsChecked()) {
-         m_cbOREXT->SetValue(false);
-         m_cbOREXT->Disable();
-         m_cbANDEXT->SetValue(false);
-         m_cbANDEXT->Disable();
-      } else {
-         m_cbOREXT->Enable();
-         m_cbANDEXT->Enable();
       }
    }
    m_frame->OnSetTriggerConfig(event.GetId(), event.IsChecked());
