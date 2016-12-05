@@ -622,7 +622,7 @@ public:
    int          GetTransport() const { return fTransport; }
    void         RegisterTest(void);
    int          RAMTest(int flag);
-   int          ChipTest();
+   int          ChipTest(int flag);
    unsigned int GetCtrlReg(void);
    unsigned short GetConfigReg(void);
    unsigned int GetStatusReg(void);

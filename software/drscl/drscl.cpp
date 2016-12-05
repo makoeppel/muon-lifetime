@@ -71,7 +71,7 @@ void print_help()
    puts("board <i>|<i1> <i2>|all     Address individual board/range/all boards");
    puts("calib [dir]                 Response Calibration. Use dir=\"area\" for MEG");
    puts("chn [n]                     Set number of channels: 8, 4, 2, 1");
-   puts("ct                          Chip Test");
+   puts("ct [histo]                  Chip Test [show histo]");
    puts("del <0|1>                   Switch delayed start on/off");
    puts("dir                         Show CF directory");
    puts("dmode <0|1>                 Set Domino mode 0=single, 1=cont.");
@@ -1333,7 +1333,7 @@ void cmd_loop()
          else {
             puts("Press 'q' to quit, any other key to repeat test.\n");
             do {
-               b->ChipTest();
+               b->ChipTest(param[1][0] > 0);
                b->SetStandbyMode(1);
                for (i=0 ; i<8 ; i++)
                   b->SetDAC(i, 0);

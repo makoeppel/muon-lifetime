@@ -3031,7 +3031,7 @@ int DRSBoard::RAMTest(int flag)
 
 /*------------------------------------------------------------------*/
 
-int DRSBoard::ChipTest()
+int DRSBoard::ChipTest(int flag)
 {
    int    i, j, tc, n_error, test_board, t;
    double freq, real_freq, max_freq;
@@ -3206,12 +3206,20 @@ int DRSBoard::ChipTest()
             GetWave(0, i, wf1[i], false, tc, 0, true);
          
          // check if more than 500 mV lost
-         for (i=0 ; i<9 ; i++)
-            for (j=0 ; j<1024 ; j++) {
-               if (wf1[i][j] < 0 && lc[i][j] == 0) {
-                  lc[i][j] = 0.15 * (wf0[i][j]-wf1[i][j])/t; // lc = C * delta_u / delta_t in [pA]
+         if (test_board) {
+            for (i=0 ; i<9 ; i++)
+               for (j=0 ; j<1024 ; j++) {
+                  if (wf1[i][j] < 0 && lc[i][j] == 0) {
+                     lc[i][j] = 0.15 * (wf0[i][j]-wf1[i][j])/t; // lc = C * delta_u / delta_t in [pA]
+                  }
                }
-            }
+         } else {
+            for (i=0 ; i<8 ; i+=2)
+               for (j=0 ; j<1024 ; j++)
+                  if (wf1[i][j] < 0 && lc[i][j] == 0) {
+                     lc[i][j] = 0.15 * (wf0[i][j]-wf1[i][j])/t; // lc = C * delta_u / delta_t in [pA]
+                  }
+         }
          
          // check if all cells drained
          if (test_board) {
@@ -3236,10 +3244,19 @@ int DRSBoard::ChipTest()
       // calculate statistics over leakage current
       double sum = 0, lcmax = 0;
       int n = 0, imax, jmax;
+      int histo[100];
       
+      memset(histo, 0, sizeof(histo));
       for (i=0 ; i<9 ; i++)
          for (j=0 ; j<1024 ; j++)
             if (lc[i][j] > 0) {
+               int bin = (int)lc[i][j];
+               if (bin == 0)
+                  bin = 0;
+               if (bin > 99)
+                  bin = 99;
+               histo[bin]++;
+               
                sum += lc[i][j];
                n++;
                if (lc[i][j] > lcmax) {
@@ -3249,6 +3266,17 @@ int DRSBoard::ChipTest()
                }
             }
       printf("Leakage current [pA]: %1.1lf average, %1.1lf max [%d/%d]\n", sum/n, lcmax, imax, jmax);
+      
+      if (flag) {
+         printf("Distrubtuion [pA-pA] N:\n");
+         for (i=99 ; i>0 ; i--)
+            if (histo[i])
+               break;
+         int hmax = i;
+         for (i=0 ; i<=hmax ; i++) {
+            printf("%d %d\n", i, histo[i]);
+         }
+      }
    }
    
    /* count errors */
