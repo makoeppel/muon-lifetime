@@ -2320,7 +2320,7 @@ int DRSBoard::SetSyncDelay(int ticks)
 
 int DRSBoard::SetReadoutDelay(float milliseconds)
 {
-   unsigned int ticks = milliseconds * 30303;
+   unsigned int ticks = (unsigned int)(milliseconds * 30303);
    if (fBoardType == 9) {
       Write(T_CTRL, REG_READOUT_DELAY, &ticks, 4);
       return 1;
@@ -3194,7 +3194,7 @@ int DRSBoard::ChipTest(int flag)
          if (t >=   0.99 && delta_t == 0.1) delta_t = 1;
          if (t >=   9.99 && delta_t == 1)   delta_t = 10;
 
-         SetReadoutDelay(t);
+         SetReadoutDelay((float)t);
          
          // average over 10 waveforms
          printf(".");
