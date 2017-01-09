@@ -1328,6 +1328,8 @@ void cmd_loop()
 
       /* Chip Test */
       else if (match(param[0], "ct")) {
+         b->SetStandbyMode(0);
+         Sleep(500);
          if (drs->GetNumberOfBoards() == 0)
             puts("No DRS board found");
          else {
@@ -1339,6 +1341,7 @@ void cmd_loop()
                   b->SetDAC(i, 0);
                i = getch();
                b->SetStandbyMode(0);
+               Sleep(500);
             } while (i != 'q');
          }
       }

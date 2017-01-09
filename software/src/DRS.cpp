@@ -2728,7 +2728,7 @@ int DRSBoard::SetFrequency(double demand, bool wait)
                break;
          SoftTrigger();
          if (i == 1000) {
-            printf("PLL did not lock for frequency %lf\n", demand);
+            printf("PLL did not lock for frequency %1.3lf\n", demand);
             return 0;
          }
       }
@@ -3033,12 +3033,15 @@ int DRSBoard::RAMTest(int flag)
 
 int DRSBoard::ChipTest(int flag)
 {
-   int    i, j, tc, n_error, test_board, t;
-   double freq, real_freq, max_freq;
-   float  waveform[1024], wf0[9][1024], wf1[9][1024];
+   int    i, j, tc, n_error, test_board;
+   double freq, real_freq, max_freq, t;
+   float  waveform[1024], wf0[9][1024], wf1[9][1024], wft[9][1024];
    double lc[9][1024];
    int    cell_error[9][1024];
-
+   double sum = 0, lcmax = 0;
+   int n = 0, imax, jmax;
+   int histo[100];
+   
    Init();
    SetChannelConfig(0, 8, 8);
    SetDominoMode(1);
@@ -3104,11 +3107,11 @@ int DRSBoard::ChipTest(int flag)
       tc = GetStopCell(0);
       GetWave(0, i, waveform, false, tc, 0, false);
       for (j=0 ; j<1024; j++)
-         if (waveform[j] < -100 || waveform[j] > 100) {
+         if (waveform[j] < -200) {
             if (j<5) {
                /* skip this cells */
             } else {
-               printf("Cell error on channel %d, cell %d: %1.1lf mV instead 0 mV\n",
+               printf("Cell error on channel %d, cell %3d: %5.1lf mV instead 0 mV\n",
                       i, (j+tc)%1024, waveform[j]);
                cell_error[i][(j+tc)%1024]++;
             }
@@ -3123,6 +3126,7 @@ int DRSBoard::ChipTest(int flag)
    /* read and check at +0.5V calibration voltage */
    EnableAcal(1, 0.5);
    StartDomino();
+   Sleep(100);
    SoftTrigger();
    while (IsBusy());
    TransferWaves(0, 8);
@@ -3131,11 +3135,11 @@ int DRSBoard::ChipTest(int flag)
       tc = GetStopCell(0);
       GetWave(0, i, waveform, false, tc, 0, false);
       for (j=0 ; j<1024; j++)
-         if (waveform[j] < 350) {
+         if (waveform[j] < 200) {
             if (j<5) {
                /* skip this cell */
             } else {
-               printf("Cell error on channel %d, cell %d: %1.1lf mV instead 400 mV\n",
+               printf("Cell error on channel %d, cell %3d: %5.1lf mV instead 400 mV\n",
                       i, (j+tc)%1024, waveform[j]);
                cell_error[i][(j+tc)%1024]++;
             }
@@ -3150,7 +3154,7 @@ int DRSBoard::ChipTest(int flag)
    /* read and check at -0.5V calibration voltage */
    EnableAcal(1, -0.5);
    StartDomino();
-   Sleep(10);
+   Sleep(100);
    SoftTrigger();
    while (IsBusy());
    TransferWaves(0, 8);
@@ -3159,11 +3163,11 @@ int DRSBoard::ChipTest(int flag)
       tc = GetStopCell(0);
       GetWave(0, i, waveform, false, tc, 0, false);
       for (j=0 ; j<1024; j++)
-         if (waveform[j] > -350) {
+         if (waveform[j] > -100) {
             if (j<5) {
                /* skip this cell */
             } else {
-               printf("Cell error on channel %d, cell %d: %1.1lf mV instead -400mV\n",
+               printf("Cell error on channel %d, cell %3d: %5.1lf mV instead -400mV\n",
                       i, (j+tc)%1024, waveform[j]);
                cell_error[i][(j+tc)%1024]++;
             }
@@ -3175,35 +3179,51 @@ int DRSBoard::ChipTest(int flag)
       }
    }
 
+   FILE *f = fopen("tmp.csv", "w");
+
    /* measure leakage current in all cells */
    if (GetFirmwareVersion() < 30000)
       printf("Please upgrade firmware to measure leakage current\n");
    else {
       memset(lc, 0, sizeof(lc));
       EnableAcal(1, 0.5);
+      Sleep(100);
       
-      // measure at t=0
-      SetReadoutDelay(0);
-      StartDomino();
-      Sleep(10);
-      SoftTrigger();
-      while (IsBusy());
-      TransferWaves(0, 8);
-      tc = GetStopCell(0);
-      for (i=0 ; i<9 ; i++)
-         GetWave(0, i, wf0[i], false, tc, 0, true);
-      
-      for (t=1 ; t<150 ; t+=1) {
+      double delta_t = 0.1;
+      for (t=0 ; t<150 ; t+=delta_t) {
+         if (t >=   0.99 && delta_t == 0.1) delta_t = 1;
+         if (t >=   9.99 && delta_t == 1)   delta_t = 10;
+
          SetReadoutDelay(t);
-         StartDomino();
-         Sleep(10);
-         SoftTrigger();
-         while (IsBusy());
-         TransferWaves(0, 8);
          
-         tc = GetStopCell(0);
-         for (i=0 ; i<9 ; i++)
-            GetWave(0, i, wf1[i], false, tc, 0, true);
+         // average over 10 waveforms
+         printf(".");
+         fflush(stdout);
+         memset(wf1, 0, sizeof(wf1));
+         for (int r=0 ; r<10 ; r++) {
+            StartDomino();
+            Sleep(10);
+            SoftTrigger();
+            while (IsBusy());
+            TransferWaves(0, 8);
+            
+            tc = GetStopCell(0);
+            for (i=0 ; i<9 ; i++) {
+               GetWave(0, i, wft[i], false, tc, 0, true);
+               
+               for (j=0 ; j<1024 ; j++)
+                  wf1[i][j] += wft[i][j]/10;
+            }
+         }
+         
+         if (t == 0)
+            memcpy(wf0, wf1, sizeof(wf0));
+         
+         fprintf(f, "%g\t", t);
+         fprintf(f, "%lf\t", wf1[0][120]);
+         fprintf(f, "%lf\t", wf1[0][292]);
+         fprintf(f, "%lf\t", wf1[0][702]);
+         fprintf(f, "\r\n");
          
          // check if more than 500 mV lost
          if (test_board) {
@@ -3242,10 +3262,6 @@ int DRSBoard::ChipTest(int flag)
       }
       
       // calculate statistics over leakage current
-      double sum = 0, lcmax = 0;
-      int n = 0, imax, jmax;
-      int histo[100];
-      
       memset(histo, 0, sizeof(histo));
       for (i=0 ; i<9 ; i++)
          for (j=0 ; j<1024 ; j++)
@@ -3265,7 +3281,7 @@ int DRSBoard::ChipTest(int flag)
                   jmax = j;
                }
             }
-      printf("Leakage current [pA]: %1.1lf average, %1.1lf max [%d/%d]\n", sum/n, lcmax, imax, jmax);
+      printf("\rLeakage current [pA]: %1.1lf average, %1.1lf max [%d/%d]\n", sum/n, lcmax, imax, jmax);
       
       if (flag) {
          printf("Distrubtuion [pA-pA] N:\n");
@@ -3279,13 +3295,17 @@ int DRSBoard::ChipTest(int flag)
       }
    }
    
+   fclose(f);
+
    /* count errors */
    for (i=n_error=0 ; i<9 ; i++)
       for (j=0 ; j<1024 ; j++)
       if (cell_error[i][j])
          n_error++;
    
-   if (n_error)
+   if (lcmax > 100)
+      printf("\n=== Chip has too high leakage current ===\n");
+   else if (n_error)
       printf("\n=== Chip has %d cells with errors ===\n", n_error);
    else
       printf("\n*** Chip test successfully finished ***\n");
