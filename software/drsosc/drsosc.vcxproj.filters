@@ -30,9 +30,6 @@
     <ClCompile Include="DOScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\DRS.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DRSOsc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -69,7 +66,10 @@
     <ClCompile Include="TriggerDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\averager.cpp">
+    <ClCompile Include="..\src\DRS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\averager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -87,9 +87,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DOScreen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\DRS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DRSOsc.h">
@@ -119,7 +116,10 @@
     <ClInclude Include="TriggerDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\averager.h">
+    <ClInclude Include="..\include\DRS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\averager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

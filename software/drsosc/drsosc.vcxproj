@@ -20,7 +20,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>NotSet</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v110_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -50,7 +50,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;\wxWidgets-3.0.2\include;\wxWidgets-3.0.2\include\msvc;\mxml;\midas\include;\meg\online\drivers\drs\libusb\include;\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;\wxWidgets-3.0.2\include;\wxWidgets-3.0.2\include\msvc;C;\drs4eb\software;C:\drs4eb\software\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;__WXMSW__;__WXDEBUG__;_WINDOWS;NOPCH;HAVE_USB;HAVE_LIBUSB10;USE_DRS_MUTEX;_UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -78,7 +78,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>\wxWidgets-3.0.2\include;\wxWidgets-3.0.2\include\msvc;..\;\mxml;\midas\include;\libusb-1.0;\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;\wxWidgets-3.0.2\include;\wxWidgets-3.0.2\include\msvc;C;\drs4eb\software;C:\drs4eb\software\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;__WXMSW__;__WXDEBUG__;_UNICODE;_WINDOWS;NOPCH;HAVE_USB;HAVE_LIBUSB10;USE_DRS_MUTEX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>
@@ -102,13 +102,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\averager.cpp" />
+    <ClCompile Include="..\src\averager.cpp" />
+    <ClCompile Include="..\src\DRS.cpp" />
     <ClCompile Include="AboutDialog.cpp" />
     <ClCompile Include="ConfigDialog.cpp" />
     <ClCompile Include="DisplayDialog.cpp" />
     <ClCompile Include="DOFrame.cpp" />
     <ClCompile Include="DOScreen.cpp" />
-    <ClCompile Include="..\DRS.cpp" />
     <ClCompile Include="DRSOsc.cpp" />
     <ClCompile Include="EPThread.cpp" />
     <ClCompile Include="InfoDialog.cpp" />
@@ -123,13 +123,13 @@
     <ClCompile Include="TriggerDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\averager.h" />
+    <ClInclude Include="..\include\averager.h" />
+    <ClInclude Include="..\include\DRS.h" />
     <ClInclude Include="AboutDialog.h" />
     <ClInclude Include="ConfigDialog.h" />
     <ClInclude Include="DisplayDialog.h" />
     <ClInclude Include="DOFrame.h" />
     <ClInclude Include="DOScreen.h" />
-    <ClInclude Include="..\DRS.h" />
     <ClInclude Include="DRSOsc.h" />
     <ClInclude Include="DRSOscInc.h" />
     <ClInclude Include="EPThread.h" />
