@@ -80,7 +80,7 @@ extern "C" {
 #endif
 #endif
 
-int EXPRT musb_open(MUSB_INTERFACE **musb_interface, int vendor, int product, int instance, int configuration, int usbinterface);
+int EXPRT musb_open(MUSB_INTERFACE **musb_interface, int vendor, int product, int instance, int configuration, int usbinterface, int debug);
 int EXPRT musb_close(MUSB_INTERFACE *musb_interface);
 int EXPRT musb_write(MUSB_INTERFACE *musb_interface,int endpoint,const void *buf,int count,int timeout_ms);
 int EXPRT musb_read(MUSB_INTERFACE *musb_interface,int endpoint,void *buf,int count,int timeout_ms);

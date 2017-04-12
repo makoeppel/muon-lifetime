@@ -142,7 +142,7 @@ IOReturn darwin_configure_device(MUSB_INTERFACE* musb)
 
 #endif
 
-int musb_open(MUSB_INTERFACE **musb_interface, int vendor, int product, int instance, int configuration, int usbinterface)
+int musb_open(MUSB_INTERFACE **musb_interface, int vendor, int product, int instance, int configuration, int usbinterface, int debug)
 {
 #if defined(HAVE_LIBUSB)
    
@@ -169,7 +169,7 @@ int musb_open(MUSB_INTERFACE **musb_interface, int vendor, int product, int inst
                }
 
                status = usb_set_configuration(udev, configuration);
-               if (status < 0) {
+               if (status != 0) {
                   fprintf(stderr, "musb_open: usb_set_configuration() error %d (%s)\n", status,
                      strerror(-status));
                   fprintf(stderr,
@@ -180,7 +180,7 @@ int musb_open(MUSB_INTERFACE **musb_interface, int vendor, int product, int inst
 
                /* see if we have write access */
                status = usb_claim_interface(udev, usbinterface);
-               if (status < 0) {
+               if (status != 0) {
                   fprintf(stderr, "musb_open: usb_claim_interface() error %d (%s)\n", status,
                      strerror(-status));
 
@@ -222,18 +222,25 @@ int musb_open(MUSB_INTERFACE **musb_interface, int vendor, int product, int inst
    
    if (first_call) {
       first_call = 0;
-      libusb_init(NULL);
-      // libusb_set_debug(NULL, 3);
+      status = libusb_init(NULL);
+      if (status != 0)
+         printf("libusb_init returns error code %d\n", status);
+      if (debug)
+         libusb_set_debug(NULL, 3);
    }
       
    n = libusb_get_device_list(NULL, &dev_list);
+   if (debug)
+      printf("Found %d USB devices\n", n);
    
    for (i=0 ; i<n ; i++) {
       status = libusb_get_device_descriptor(dev_list[i], &desc);
+      if (debug)
+         printf("Found device VID=%04X PID=%04X\n", desc.idVendor, desc.idProduct);
       if (desc.idVendor == vendor && desc.idProduct == product) {
-         if (count == instance) {
+         if (count == instance || debug) {
             status = libusb_open(dev_list[i], &dev);
-            if (status < 0) {
+            if (status != 0) {
                fprintf(stderr, "musb_open: libusb_open() error %d\n", status);
                return MUSB_ACCESS_ERROR;
             }
@@ -249,7 +256,7 @@ int musb_open(MUSB_INTERFACE **musb_interface, int vendor, int product, int inst
             
             /* see if we have write access */
             status = libusb_claim_interface(dev, usbinterface);
-            if (status < 0) {
+            if (status != 0) {
                fprintf(stderr, "musb_open: libusb_claim_interface() error %d\n", status);
                
 #ifdef _MSC_VER
@@ -269,8 +276,11 @@ int musb_open(MUSB_INTERFACE **musb_interface, int vendor, int product, int inst
             (*musb_interface)->dev = dev;
             (*musb_interface)->usb_configuration = configuration;
             (*musb_interface)->usb_interface     = usbinterface;
-            return MUSB_SUCCESS;
-
+            
+            if (debug)
+               printf("Found DRS4 evaluation board and successfully claimed interface\n");
+            else
+               return MUSB_SUCCESS;
          }
          count++;
       }
@@ -472,7 +482,11 @@ int musb_close(MUSB_INTERFACE *musb_interface)
 #elif defined(HAVE_LIBUSB10)   
 
    int status;
+   if (!musb_interface)
+      return 0;
+   
    status = libusb_release_interface(musb_interface->dev, musb_interface->usb_interface);
+
    if (status < 0)
       fprintf(stderr, "musb_close: libusb_release_interface() error %d\n", status);
    

@@ -252,6 +252,7 @@
 					IOKit,
 					"-framework",
 					Carbon,
+					"--stdlib=libc++",
 				);
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -273,6 +274,7 @@
 					IOKit,
 					"-framework",
 					Carbon,
+					"--stdlib=libc++",
 				);
 				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";

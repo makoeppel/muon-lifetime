@@ -308,7 +308,7 @@ DRS::DRS()
       found = 0;
 
       /* check for USB-Mezzanine test board */
-      if (musb_open(&usb_interface, 0x10C4, 0x1175, index, 1, 0) == MUSB_SUCCESS) {
+      if (musb_open(&usb_interface, 0x10C4, 0x1175, index, 1, 0, 0) == MUSB_SUCCESS) {
 
          /* check ID */
          buffer[0] = USB_CMD_IDENT;
@@ -332,7 +332,7 @@ DRS::DRS()
       }
 
       /* check for DRS4 evaluation board */
-      if (musb_open(&usb_interface, 0x04B4, 0x1175, index, 1, 0) == MUSB_SUCCESS) {
+      if (musb_open(&usb_interface, 0x04B4, 0x1175, index, 1, 0, 0) == MUSB_SUCCESS) {
 
          /* check ID */
          if (musb_get_device(usb_interface) != 1) {
@@ -392,6 +392,7 @@ DRS::~DRS()
 }
 
 /*------------------------------------------------------------------*/
+
 
 void DRS::SortBoards()
 {

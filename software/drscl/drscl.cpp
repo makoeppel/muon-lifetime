@@ -49,6 +49,7 @@
 
 const char *drscl_svn_revision = "$Id: drscl.cpp 21435 2014-07-30 13:02:31Z ritt $";
 
+void lusb(void);
 void print_help();
 void clear_screen();
 int match(const char *str, const char *cmd);
@@ -173,6 +174,19 @@ void ProgressBar::Progress(int prog)
       printf("=");
    printf("\r");
    fflush(stdout);
+}
+
+/*------------------------------------------------------------------*/
+
+void lusb(void)
+{
+#ifdef HAVE_USB
+   MUSB_INTERFACE *usb_interface;
+   
+   musb_open(&usb_interface, 0x04B4, 0x1175, 0, 1, 0, 1);
+   musb_close(usb_interface);
+   
+#endif // HAVE_USB
 }
 
 /*------------------------------------------------------------------*/
@@ -1636,8 +1650,13 @@ void cmd_loop()
 
 /*------------------------------------------------------------------*/
 
-int main()
+int main(int argc, char *argv[])
 {
+   if (argc == 2 && argv[1][1] == 'l') {
+      lusb();
+      return 0;
+   }
+   
    printf("DRS command line tool, Revision %d\n", atoi(drscl_svn_revision+15));
    printf("Type 'help' for a list of available commands.\n\n");
 
