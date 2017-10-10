@@ -3043,22 +3043,33 @@ int DRSBoard::ChipTest(int flag)
    int n = 0, imax, jmax;
    int histo[100];
    
-   Init();
-   SetChannelConfig(0, 8, 8);
-   SetDominoMode(1);
-   SetReadoutMode(1);
-   SetDominoActive(1);
-   SetTranspMode(0);
-   EnableTrigger(0, 0);
-   EnableTcal(0);
-   SelectClockSource(0);
-
-   printf("Chip test at %1.1lf deg. C\n", GetTemperature());
+   for (int retry = 0 ; retry < 5 ; retry++) {
+      Init();
+      SetChannelConfig(0, 8, 8);
+      SetDominoMode(1);
+      SetReadoutMode(1);
+      SetDominoActive(1);
+      SetTranspMode(0);
+      EnableTrigger(0, 0);
+      EnableTcal(0);
+      SelectClockSource(0);
+      
+      printf("Chip test at %1.1lf deg. C\n", GetTemperature());
+      
+      /* test 1 GHz */
+      SetFrequency(1, true);
+      StartDomino();
+      Sleep(100);
+      
+      if ((GetStatusReg() & BIT_PLL_LOCKED0))
+         break;
+      
+      SetStandbyMode(1);
+      Sleep(300);
+      SetStandbyMode(0);
+      Sleep(300);
+   }
    
-   /* test 1 GHz */
-   SetFrequency(1, true);
-   StartDomino();
-   Sleep(100);
    if (!(GetStatusReg() & BIT_PLL_LOCKED0)) {
       puts("PLL did not lock at 1 GHz");
       return 0;
@@ -3192,16 +3203,15 @@ int DRSBoard::ChipTest(int flag)
       
       double delta_t = 0.1;
       for (t=0 ; t<150 ; t+=delta_t) {
-         if (t >=   0.99 && delta_t == 0.1) delta_t = 1;
-         if (t >=   9.99 && delta_t == 1)   delta_t = 10;
+         delta_t *= 1.5;
 
          SetReadoutDelay((float)t);
          
-         // average over 10 waveforms
+         // average over 5 waveforms
          printf(".");
          fflush(stdout);
          memset(wf1, 0, sizeof(wf1));
-         for (int r=0 ; r<10 ; r++) {
+         for (int r=0 ; r<5 ; r++) {
             StartDomino();
             Sleep(10);
             SoftTrigger();
@@ -3213,7 +3223,7 @@ int DRSBoard::ChipTest(int flag)
                GetWave(0, i, wft[i], false, tc, 0, true);
                
                for (j=0 ; j<1024 ; j++)
-                  wf1[i][j] += wft[i][j]/10;
+                  wf1[i][j] += wft[i][j]/5;
             }
          }
          
@@ -3304,10 +3314,10 @@ int DRSBoard::ChipTest(int flag)
       if (cell_error[i][j])
          n_error++;
    
-   if (lcmax > 100)
-      printf("\n=== Chip has too high leakage current ===\n");
+   if (lcmax > 10)
+      printf("\n========== Chip has too high leakage current ==========\n");
    else if (n_error)
-      printf("\n=== Chip has %d cells with errors ===\n", n_error);
+      printf("\n========== Chip has %d cells with errors ==========\n", n_error);
    else
       printf("\n*** Chip test successfully finished ***\n");
    
