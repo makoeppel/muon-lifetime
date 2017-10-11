@@ -133,10 +133,10 @@
   <ItemGroup>
     <ClCompile Include="..\src\averager.cpp" />
     <ClCompile Include="..\src\DRS.cpp" />
+    <ClCompile Include="..\src\musbstd.c" />
+    <ClCompile Include="..\src\mxml.c" />
+    <ClCompile Include="..\src\strlcpy.c" />
     <ClCompile Include="drscl.cpp" />
-    <ClCompile Include="..\..\..\..\..\midas\drivers\usb\musbstd.c" />
-    <ClCompile Include="..\..\..\..\..\mxml\mxml.c" />
-    <ClCompile Include="..\..\..\..\..\mxml\strlcpy.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\averager.h" />
