@@ -1998,11 +1998,11 @@ int DRSBoard::Init()
    if (fNominalFrequency < 0.1 || fNominalFrequency > 6)
       fNominalFrequency = 1;
 
-   
    if (fHasMultiBuffer) {
       SetMultiBuffer(fMultiBuffer);
       SetMultiBufferRP(fReadPointer);
    }
+   SetStandbyMode(0);
    SetDominoMode(fDominoMode);
    SetReadoutMode(fReadoutMode);
    EnableTrigger(fTriggerEnable1, fTriggerEnable2);
@@ -3034,14 +3034,14 @@ int DRSBoard::RAMTest(int flag)
 
 int DRSBoard::ChipTest(int flag)
 {
-   int    i, j, tc, n_error, test_board;
+   int    i, j, i_max, j_max, tc, n_error, test_board;
    double freq, real_freq, max_freq, t;
    float  waveform[1024], wf0[9][1024], wf1[9][1024], wft[9][1024];
    double lc[9][1024];
    int    cell_error[9][1024];
-   double sum = 0, lcmax = 0;
-   int n = 0, imax, jmax;
-   int histo[100];
+   double sum = 0, lcmax = 0, v_max;
+   int    n = 0, imax, jmax;
+   int    histo[100];
    
    for (int retry = 0 ; retry < 5 ; retry++) {
       Init();
@@ -3191,8 +3191,6 @@ int DRSBoard::ChipTest(int flag)
       }
    }
 
-   FILE *f = fopen("tmp.csv", "w");
-
    /* measure leakage current in all cells */
    if (GetFirmwareVersion() < 30000)
       printf("Please upgrade firmware to measure leakage current\n");
@@ -3201,14 +3199,17 @@ int DRSBoard::ChipTest(int flag)
       EnableAcal(1, 0.5);
       Sleep(100);
       
-      double delta_t = 0.1;
-      for (t=0 ; t<150 ; t+=delta_t) {
+      double delta_t = 1;
+      for (t=0 ; t<500 ; t+=delta_t) {
          delta_t *= 1.5;
 
          SetReadoutDelay((float)t);
          
          // average over 5 waveforms
-         printf(".");
+         if (flag)
+            printf("%5.1f ms - ", t);
+         else
+            printf(".");
          fflush(stdout);
          memset(wf1, 0, sizeof(wf1));
          for (int r=0 ; r<5 ; r++) {
@@ -3230,16 +3231,17 @@ int DRSBoard::ChipTest(int flag)
          if (t == 0)
             memcpy(wf0, wf1, sizeof(wf0));
          
-         fprintf(f, "%g\t", t);
-         fprintf(f, "%lf\t", wf1[0][120]);
-         fprintf(f, "%lf\t", wf1[0][292]);
-         fprintf(f, "%lf\t", wf1[0][702]);
-         fprintf(f, "\r\n");
-         
          // check if more than 500 mV lost
+         v_max = -500;
+         i_max = j_max = -1;
          if (test_board) {
             for (i=0 ; i<9 ; i++)
                for (j=0 ; j<1024 ; j++) {
+                  if (wf1[i][j] > v_max) {
+                     v_max = wf1[i][j];
+                     i_max = i;
+                     j_max = j;
+                  }
                   if (wf1[i][j] < 0 && lc[i][j] == 0) {
                      lc[i][j] = 0.15 * (wf0[i][j]-wf1[i][j])/t; // lc = C * delta_u / delta_t in [pA]
                   }
@@ -3247,29 +3249,22 @@ int DRSBoard::ChipTest(int flag)
          } else {
             for (i=0 ; i<8 ; i+=2)
                for (j=0 ; j<1024 ; j++)
+                  if (wf1[i][j] > v_max) {
+                     v_max = wf1[i][j];
+                     i_max = i;
+                     j_max = j;
+                  }
                   if (wf1[i][j] < 0 && lc[i][j] == 0) {
                      lc[i][j] = 0.15 * (wf0[i][j]-wf1[i][j])/t; // lc = C * delta_u / delta_t in [pA]
                   }
          }
          
+         if (flag)
+            printf(" %5.1lf mV [%d,%d]\n", v_max, i_max, j_max);
+         
          // check if all cells drained
-         if (test_board) {
-            for (i=0 ; i<9 ; i++)
-               for (j=0 ; j<1024 ; j++)
-                  if (lc[i][j] == 0)
-                     break;
-            
-            if (i == 9 && j == 1024)
-               break;
-         } else {
-            for (i=0 ; i<8 ; i+=2)
-               for (j=0 ; j<1024 ; j++)
-                  if (lc[i][j] == 0)
-                     break;
-            
-            if (i == 8 && j == 1024)
-               break;
-         }
+         if (v_max < 0)
+            break;
       }
       
       // calculate statistics over leakage current
@@ -3306,8 +3301,6 @@ int DRSBoard::ChipTest(int flag)
       }
    }
    
-   fclose(f);
-
    /* count errors */
    for (i=n_error=0 ; i<9 ; i++)
       for (j=0 ; j<1024 ; j++)
