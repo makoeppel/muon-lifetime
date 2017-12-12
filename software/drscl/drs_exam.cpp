@@ -83,7 +83,7 @@ int main()
    //b->SetInputRange(0.5);
    
    /* use following line to turn on the internal 100 MHz clock connected to all channels  */
-   b->EnableTcal(1);
+   //b->EnableTcal(1);
 
    /* use following lines to enable hardware trigger on CH1 at 50 mV positive edge */
    if (b->GetBoardType() >= 8) {        // Evaluaiton Board V4&5
@@ -95,7 +95,7 @@ int main()
    }
    b->SetTriggerLevel(0.05);            // 0.05 V
    b->SetTriggerPolarity(false);        // positive edge
-   
+
    /* use following lines to set individual trigger elvels */
    //b->SetIndividualTriggerLevel(1, 0.1);
    //b->SetIndividualTriggerLevel(2, 0.2);
@@ -106,12 +106,12 @@ int main()
    b->SetTriggerDelayNs(0);             // zero ns trigger delay
    
    /* use following lines to enable the external trigger */
-   //if (b->GetBoardType() == 8) {     // Evaluaiton Board V4
+   //if (b->GetBoardType() >= 8) {        // Evaluaiton Board V4
    //   b->EnableTrigger(1, 0);           // enable hardware trigger
-   //   b->SetTriggerSource(1<<4);        // set external trigger as source
-   //} else {                          // Evaluation Board V3
+   //   b->SetTriggerConfig(1<<4);        // set external trigger as source
+   //} else {                             // Evaluation Board V3
    //   b->EnableTrigger(1, 0);           // lemo on, analog trigger off
-   // }
+   //}
 
    /* open file to save waveforms */
    f = fopen("data.txt", "w");
