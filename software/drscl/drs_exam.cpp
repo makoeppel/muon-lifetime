@@ -106,7 +106,7 @@ int main()
    b->SetTriggerDelayNs(0);             // zero ns trigger delay
    
    /* use following lines to enable the external trigger */
-   //if (b->GetBoardType() >= 8) {        // Evaluaiton Board V4
+   //if (b->GetBoardType() >= 8) {        // Evaluaiton Board V4&5
    //   b->EnableTrigger(1, 0);           // enable hardware trigger
    //   b->SetTriggerConfig(1<<4);        // set external trigger as source
    //} else {                             // Evaluation Board V3
