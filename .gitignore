@@ -1,8 +1,8 @@
 software/drscl/DRSOsc.app
-drs_exam
-drs_exam_multi
-drscl
-drsosc
+software/drscl/drs_exam
+software/drscl/drs_exam_multi
+software/drscl/drscl
+software/drsosc/drsosc
 firmware/3s400/iseconfig/
 firmware/3s400/xst/
 firmware/3s400/_xmsgs/
