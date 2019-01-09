@@ -29,7 +29,7 @@ OUTNAME       = drsosc
 
 # OS specific flags
 ifeq ($(OSTYPE),Darwin)
-CFLAGS        += -DOS_DARWIN -stdlib=libstdc++
+CFLAGS        += -DOS_DARWIN -stdlib=libc++
 LIBS          += -lusb-1.0
 endif
 

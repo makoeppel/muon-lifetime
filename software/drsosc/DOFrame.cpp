@@ -1359,7 +1359,7 @@ void DOFrame::OnTimer(wxTimerEvent& event)
 
          str.Printf(wxT("This board was calibrated at %1.2lg V ... %1.2lg V\nYou must recalibrate the board if you use a different input range"), 
             GetOsci()->GetCalibratedInputRange()-0.5, GetOsci()->GetCalibratedInputRange()+0.5);
-         wxMessageBox((const wxChar*)wxString::FromAscii((const char*)str), wxT("DRS Oscilloscope Warning"), wxOK | wxICON_EXCLAMATION, this);
+         wxMessageBox(str, wxT("DRS Oscilloscope Warning"), wxOK | wxICON_EXCLAMATION, this);
       }
       
       // issue warning if timing calibration not valid
