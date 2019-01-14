@@ -1151,7 +1151,7 @@ void DOScreen::DrawHisto(wxDC& dc, wxCoord width, wxCoord height, bool printing)
    }
    
    // save button
-   wxString wxs("Save");
+   wxString wxs(wxT("Save"));
    dc.GetTextExtent(wxs, &w, &h);
    m_savex1 = m_hx2-w-8;
    m_savey1 = m_hy1+4;
