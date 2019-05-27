@@ -129,7 +129,7 @@ int main(int argc, const char * argv[])
       printf("Found data for board #%d\n", bh.board_serial_number);
       
       // read time bin widths
-      memset(bin_width[b], sizeof(bin_width[0]), 0);
+      memset(bin_width[b], 0, sizeof(bin_width[0]));
       for (chn=0 ; chn<5 ; chn++) {
          fread(&ch, sizeof(ch), 1, f);
          if (ch.c[0] != 'C') {
