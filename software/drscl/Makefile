@@ -8,7 +8,7 @@
 OSTYPE = $(shell uname)
 
 FLAGS         = -g -O3 -Wall -Wuninitialized -Wno-unused-result -DOS_LINUX
-FLAGS         += -I../include -I/usr/local/include
+FLAGS         += -I../include -I/usr/local/include -I/usr/local/include/libusb-1.0
 LIBS          = -lpthread -lutil -lusb-1.0
 
 OBJECTS       = DRS.o averager.o musbstd.o mxml.o strlcpy.o
