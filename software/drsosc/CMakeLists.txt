@@ -24,7 +24,7 @@ set(SRC
    ConfigDialog
    DOFrame
    DOScreen
-   DRSOsc
+   DRSOsc.cpp
    MeasureDialog
    Measurement
    Osci
