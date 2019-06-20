@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
 
-set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR})
-message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
-
 include_directories(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/mxml)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 find_package(libusb-1.0 REQUIRED)
