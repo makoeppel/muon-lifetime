@@ -16,10 +16,10 @@ ifeq ($(HAVE_WX),)
 $(error Error: wxWidgets required to compile "drsosc")
 endif
 
-CFLAGS        = -g -O2 -Wall -Wuninitialized -Wno-unused-result -fno-strict-aliasing -DHAVE_USB -DHAVE_LIBUSB10 -DUSE_DRS_MUTEX
-CFLAGS        += -I../include -I../ -I/usr/local/include
+CFLAGS        = -g -O2 -Wall -Wuninitialized -Wno-unused-result -Wno-deprecated-declarations -fno-strict-aliasing -DHAVE_USB -DHAVE_LIBUSB10 -DUSE_DRS_MUTEX
+CFLAGS        += -I../include -I../mxml -I../ -I/usr/local/include -I/usr/local/include/libusb-1.0/
 WXFLAGS       = $(shell wx-config --cxxflags)
-LIBS          = -L/usr/local/lib -lpthread -lutil
+LIBS          = -L/usr/local/lib/ -L/opt/local/lib/ -lpthread -lutil
 LIBS          += $(shell wx-config --libs)
 
 WX_OBJ        = ConfigDialog.o DOFrame.o DOScreen.o DRSOsc.o MeasureDialog.o Measurement.o Osci.o EPThread.o DisplayDialog.o InfoDialog.o AboutDialog.o TriggerDialog.o
@@ -58,7 +58,7 @@ DRSOsc.app: drsosc
 read_binary: read_binary.cpp
 	$(CXX) $(CFLAGS)  -o $@ $<
 
-main.o: %.o: %.cpp ../include/mxml.h ../include/DRS.h
+main.o: %.o: %.cpp ../mxml/mxml.h ../include/DRS.h
 	$(CXX) $(CFLAGS) $(WXFLAGS) -c $<
 
 musbstd.o: ../src/musbstd.c ../include/musbstd.h
@@ -73,13 +73,13 @@ rb.o: rb.cpp rb.h
 averager.o: ../src/averager.cpp ../include/averager.h
 	$(CXX) $(CFLAGS) -c $<
 
-mxml.o: ../src/mxml.c ../include/mxml.h
-	$(CC) $(CFLAGS) -c $<
+mxml.o: ../mxml/mxml.cxx ../mxml/mxml.h
+	$(CXX) $(CFLAGS) -c $<
 
-strlcpy.o: ../src/strlcpy.c ../include/strlcpy.h
-	$(CC) $(CFLAGS) -c $<
+strlcpy.o: ../mxml/strlcpy.cxx ../mxml/strlcpy.h
+	$(CXX) $(CFLAGS) -c $<
 
-$(WX_OBJ): %.o: %.cpp %.h ../include/mxml.h ../include/DRS.h
+$(WX_OBJ): %.o: %.cpp %.h ../mxml/mxml.h ../include/DRS.h
 	$(CXX) $(CFLAGS) $(WXFLAGS) -c $<
 
 clean:

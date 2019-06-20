@@ -8,11 +8,7 @@
 \********************************************************************/
 
 #include <stdio.h>
-#ifdef OS_DARWIN
-#include <sys/malloc.h>
-#else
-#include <malloc.h>
-#endif
+#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 
