@@ -109,12 +109,12 @@ DOFrame_fb::DOFrame_fb( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_btRun = new wxButton( m_pnControls, ID_RUN, wxT("Stop"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	m_btRun->SetToolTip( wxT("Start/Stop Acquisition") );
 
-	bSizer32->Add( m_btRun, 1, wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer32->Add( m_btRun, 1, wxEXPAND, 5 );
 
 	m_btSingle = new wxButton( m_pnControls, ID_SINGLE, wxT("Single"), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	m_btSingle->SetToolTip( wxT("Arm for Single Trigger") );
 
-	bSizer32->Add( m_btSingle, 1, wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	bSizer32->Add( m_btSingle, 1, wxEXPAND, 5 );
 
 
 	bSizer5->Add( bSizer32, 0, wxEXPAND, 5 );
@@ -199,7 +199,7 @@ DOFrame_fb::DOFrame_fb( wxWindow* parent, wxWindowID id, const wxString& title, 
 	bSizer20 = new wxBoxSizer( wxHORIZONTAL );
 
 	m_bpButton2 = new wxBitmapButton( m_pnControls, ID_HSCALEDOWN, wxBitmap( left_xpm ), wxDefaultPosition, wxSize( -1,32 ), wxBU_AUTODRAW );
-	bSizer20->Add( m_bpButton2, 0, wxEXPAND|wxALIGN_CENTER_VERTICAL, 10 );
+	bSizer20->Add( m_bpButton2, 0, wxEXPAND, 10 );
 
 	m_stHScale = new wxStaticText( m_pnControls, wxID_ANY, wxT("ns/div"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE|wxST_NO_AUTORESIZE );
 	m_stHScale->Wrap( -1 );
@@ -208,7 +208,7 @@ DOFrame_fb::DOFrame_fb( wxWindow* parent, wxWindowID id, const wxString& title, 
 	bSizer20->Add( m_stHScale, 1, wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_bpButton3 = new wxBitmapButton( m_pnControls, ID_HSCALEUP, wxBitmap( right_xpm ), wxDefaultPosition, wxSize( -1,32 ), wxBU_AUTODRAW );
-	bSizer20->Add( m_bpButton3, 0, wxEXPAND|wxALIGN_CENTER_VERTICAL, 10 );
+	bSizer20->Add( m_bpButton3, 0, wxEXPAND, 10 );
 
 
 	sbSizer2->Add( bSizer20, 0, wxEXPAND, 5 );
@@ -216,7 +216,7 @@ DOFrame_fb::DOFrame_fb( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_slHOffset = new wxSlider( m_pnControls, ID_HOR_POS, 0, -1000, 1000, wxDefaultPosition, wxSize( -1,20 ), wxSL_HORIZONTAL|wxSTATIC_BORDER );
 	m_slHOffset->SetToolTip( wxT("Set Horizontal Position") );
 
-	sbSizer2->Add( m_slHOffset, 0, wxALIGN_CENTER_VERTICAL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 3 );
+	sbSizer2->Add( m_slHOffset, 0, wxEXPAND, 3 );
 
 
 	bSizer2->Add( sbSizer2, 0, wxEXPAND, 5 );
@@ -444,10 +444,10 @@ DOFrame_fb::DOFrame_fb( wxWindow* parent, wxWindowID id, const wxString& title, 
 	gSizer4->Add( m_btExit, 0, wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
 
 
-	sbSizer9->Add( gSizer4, 1, wxALIGN_CENTER_HORIZONTAL, 5 );
+	sbSizer9->Add( gSizer4, 1, 0, 5 );
 
 
-	bSizer2->Add( sbSizer9, 0, wxALIGN_CENTER|wxEXPAND, 5 );
+	bSizer2->Add( sbSizer9, 0, wxEXPAND, 5 );
 
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
@@ -459,7 +459,7 @@ DOFrame_fb::DOFrame_fb( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_pnControls->SetSizer( bSizer2 );
 	m_pnControls->Layout();
 	bSizer2->Fit( m_pnControls );
-	bSizer1->Add( m_pnControls, 0, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 0 );
+	bSizer1->Add( m_pnControls, 0, wxEXPAND, 0 );
 
 
 	this->SetSizer( bSizer1 );
@@ -723,7 +723,7 @@ ConfigDialog_fb::ConfigDialog_fb( wxWindow* parent, wxWindowID id, const wxStrin
 	wxArrayString m_cbBoardChoices;
 	m_cbBoard = new wxChoice( this, ID_BSEL, wxDefaultPosition, wxDefaultSize, m_cbBoardChoices, 0 );
 	m_cbBoard->SetSelection( 0 );
-	bSizer37->Add( m_cbBoard, 1, wxALIGN_CENTER_VERTICAL|wxEXPAND|wxTOP|wxBOTTOM, 5 );
+	bSizer37->Add( m_cbBoard, 1, wxEXPAND|wxTOP|wxBOTTOM, 5 );
 
 	m_btScan = new wxButton( this, wxID_ANY, wxT("Rescan"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer37->Add( m_btScan, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxLEFT, 5 );
@@ -752,7 +752,7 @@ ConfigDialog_fb::ConfigDialog_fb( wxWindow* parent, wxWindowID id, const wxStrin
 	sbSizer511->Add( m_rbChHalf, 0, wxBOTTOM, 5 );
 
 	m_cbClkOn = new wxCheckBox( this, wxID_ANY, wxT("Connect reference clock to all channels"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizer511->Add( m_cbClkOn, 0, wxALIGN_CENTER_VERTICAL|wxTOP, 5 );
+	sbSizer511->Add( m_cbClkOn, 0, wxTOP, 5 );
 
 
 	bSizer12->Add( sbSizer511, 0, wxEXPAND|wxRIGHT|wxLEFT, 5 );
@@ -825,7 +825,7 @@ ConfigDialog_fb::ConfigDialog_fb( wxWindow* parent, wxWindowID id, const wxStrin
 
 	m_cbCalibrated = new wxCheckBox( this, ID_DISP_CALIBRATED, wxT("Apply Primary Calibration (Cell)"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_cbCalibrated->SetValue(true);
-	sbSizer5->Add( m_cbCalibrated, 0, wxALIGN_CENTER_VERTICAL|wxRIGHT|wxLEFT, 5 );
+	sbSizer5->Add( m_cbCalibrated, 0, wxRIGHT|wxLEFT, 5 );
 
 	m_cbCalibrated2 = new wxCheckBox( this, ID_DISP_CALIBRATED2, wxT("Apply Secondary Calibration (Readout)"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_cbCalibrated2->SetValue(true);
@@ -1291,19 +1291,19 @@ MeasureDialog_fb::MeasureDialog_fb( wxWindow* parent, wxWindowID id, const wxStr
 	gSizer2->Add( m_checkBox85, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_staticline4 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	gSizer2->Add( m_staticline4, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
+	gSizer2->Add( m_staticline4, 0, wxEXPAND|wxTOP|wxBOTTOM|wxLEFT, 5 );
 
 	m_staticline41 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	gSizer2->Add( m_staticline41, 0, wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5 );
+	gSizer2->Add( m_staticline41, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
 
 	m_staticline42 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	gSizer2->Add( m_staticline42, 0, wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5 );
+	gSizer2->Add( m_staticline42, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
 
 	m_staticline43 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	gSizer2->Add( m_staticline43, 0, wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM, 5 );
+	gSizer2->Add( m_staticline43, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
 
 	m_staticline44 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-	gSizer2->Add( m_staticline44, 0, wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxTOP|wxBOTTOM|wxRIGHT, 5 );
+	gSizer2->Add( m_staticline44, 0, wxEXPAND|wxTOP|wxBOTTOM|wxRIGHT, 5 );
 
 	m_staticText85 = new wxStaticText( this, wxID_ANY, wxT("Time"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText85->Wrap( -1 );
@@ -1466,7 +1466,7 @@ MeasureDialog_fb::MeasureDialog_fb( wxWindow* parent, wxWindowID id, const wxStr
 
 	m_cbStat = new wxCheckBox( this, wxID_ANY, wxT("Display Statistics"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_cbStat->SetValue(true);
-	bSizer35->Add( m_cbStat, 1, wxALL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	bSizer35->Add( m_cbStat, 1, wxALL|wxEXPAND, 5 );
 
 	m_cbHist = new wxCheckBox( this, wxID_ANY, wxT("Display Histograms"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer35->Add( m_cbHist, 1, wxALL|wxEXPAND, 5 );
@@ -1514,7 +1514,7 @@ MeasureDialog_fb::MeasureDialog_fb( wxWindow* parent, wxWindowID id, const wxStr
 	bSizer14->Add( m_staticline21, 0, wxEXPAND | wxALL, 5 );
 
 	m_button11 = new wxButton( this, wxID_ANY, wxT("Cl&ose"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer14->Add( m_button11, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 10 );
+	bSizer14->Add( m_button11, 0, wxALIGN_RIGHT|wxALL, 10 );
 
 
 	this->SetSizer( bSizer14 );
@@ -1818,7 +1818,7 @@ TriggerDialog_fb::TriggerDialog_fb( wxWindow* parent, wxWindowID id, const wxStr
 	bSizer14->Add( m_staticline25, 0, wxEXPAND, 5 );
 
 	m_button11 = new wxButton( this, wxID_ANY, wxT("Cl&ose"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer14->Add( m_button11, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 10 );
+	bSizer14->Add( m_button11, 0, wxALIGN_RIGHT|wxALL, 10 );
 
 
 	this->SetSizer( bSizer14 );
