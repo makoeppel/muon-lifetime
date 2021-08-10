@@ -1122,8 +1122,8 @@ double Osci::GetMinSamplingSpeed()
 
 int Osci::GetWaveformDepth(int channel)
 { 
-   if (channel == 3 && m_clkOn && m_waveDepth > kNumberOfBins)
-      return m_waveDepth - kNumberOfBins; // clock chnnael has only 1024 bins
+   if (channel == 4 && m_clkOn && m_waveDepth > kNumberOfBins)
+      return m_waveDepth - kNumberOfBins; // clock channel has only 1024 bins
 
    return m_waveDepth; 
 }
