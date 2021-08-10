@@ -226,8 +226,6 @@ int musb_open(MUSB_INTERFACE **musb_interface, int vendor, int product, int inst
       status = libusb_init(NULL);
       if (status != 0)
          printf("libusb_init returns error code %d\n", status);
-      if (debug)
-         libusb_set_debug(NULL, 3);
    }
       
    n = libusb_get_device_list(NULL, &dev_list);
