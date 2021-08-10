@@ -35,7 +35,7 @@ add_executable(drsosc ${SRC} ${LIBSRC})
 
 target_compile_options(drsosc PRIVATE 
    -Wno-deprecated-declarations
-   -DOS_LINUX -DHAVE_USB -DHAVE_LIBUSB10)
+   -DOS_LINUX -DHAVE_USB -DHAVE_LIBUSB10 -DUSE_DRS_MUTEX)
 target_compile_options(drsosc PRIVATE ${WX_CXXFLAGS})
 
 target_include_directories(drsosc PRIVATE 
@@ -45,5 +45,10 @@ target_include_directories(drsosc PRIVATE
 target_link_libraries(drsosc ${LIBUSB_1_LIBRARIES} ${WX_LIBS})
 
 target_link_options(drsosc PRIVATE -L/opt/local/lib)
+
+set_target_properties(drsosc PROPERTIES
+   MACOSX_BUNDLE ON
+   MACOSX_BUNDLE_BUNDLE_NAME "DRSOsc"
+   MACOSC_BUNDLE_BUNDLE_IDENTIFIER "PSI.DRSOsc")
 
 install(TARGETS drsosc DESTINATION bin)
