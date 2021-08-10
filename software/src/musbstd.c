@@ -581,7 +581,7 @@ int musb_read(MUSB_INTERFACE *musb_interface, int endpoint, void *buf, int count
    libusb_bulk_transfer(musb_interface->dev, endpoint | 0x80, (unsigned char*)buf, count, &n_read, timeout);
    /* errors should be handled in upper layer ....
     if (n_read <= 0) {
-    fprintf(stderr, "musb_read: requested %d, read %d, errno %d (%s)\n", count, n_read, status, strerror(status));
+    fprintf(stderr, "musb_read: requested %d, read %d, errno %d (%s)\n", count, n_read, status, libusb_strerror(status));
     }
     */
    

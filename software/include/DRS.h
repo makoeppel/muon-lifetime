@@ -534,6 +534,7 @@ protected:
    int                  fTcalPhase;
    int                  fTcalSource;
    int                  fRefclk;
+   double               fTemperature;
 
    unsigned char        fWaveforms[kNumberOfChipsMax * kNumberOfChannelsMax * 2 * kNumberOfBins];
 
@@ -741,7 +742,8 @@ public:
    int          GetTcalSource() { return fTcalSource; }
    int          SetCalibVoltage(double value);
    int          SetCalibTiming(int t1, int t2);
-   double       GetTemperature();
+   double       GetTemperature() { return fTemperature; };
+   int          ReadTemperature();
    int          Is2048ModeCapable();
    int          GetTriggerBus();
    unsigned int GetScaler(int channel);

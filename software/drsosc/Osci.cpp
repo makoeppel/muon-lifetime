@@ -424,6 +424,7 @@ void *OsciThread::Entry()
    DRSBoard *b;
    TIMESTAMP ts;
    bool skip_event;
+   time_t lastTempRead = 0;
 
    n = m = 0;
    autoTriggered = false;
@@ -471,7 +472,7 @@ void *OsciThread::Entry()
                      *p++ = (unsigned short)b->GetBoardSerialNumber();
                   }
 
-                  // restart boards in invertd order (master last)
+                  // restart boards in inverted order (master last)
                   for (index = m_osci->GetDRS()->GetNumberOfBoards()-1 ; index>=0 ; index--) {
                      b = m_osci->GetBoard(index);
                      if (!m_osci->IsMultiBoard() && m_osci->GetCurrentBoard() != b)
@@ -537,7 +538,18 @@ void *OsciThread::Entry()
          wxThread::Sleep(10);
          m_active = false;
       }
-      
+
+      // read temperature once every second
+      time_t now;
+      time(&now);
+      if (now > lastTempRead) {
+         lastTempRead = now;
+         for (int i=0 ; i<m_osci->GetDRS()->GetNumberOfBoards() ; i++) {
+            b = m_osci->GetBoard(i);
+            b->ReadTemperature();
+         }
+      }
+
    } while (!m_stopThread);
 
    m_finished = true;

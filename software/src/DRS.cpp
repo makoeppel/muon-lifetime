@@ -500,6 +500,7 @@ DRSBoard::DRSBoard(MUSB_INTERFACE * musb_interface, int usb_slot)
     , fNumberOfTimeData(0)
     , fDebug(0)
     , fTriggerStartBin(0)
+    , fTemperature(0)
 {
    if (musb_interface->usb_type == 1)
       fTransport = TR_USB;
@@ -4501,19 +4502,19 @@ int DRSBoard::FinishClearCycle()
 
 /*------------------------------------------------------------------*/
 
-double DRSBoard::GetTemperature()
+int DRSBoard::ReadTemperature()
 {
    // Read Out Temperature Sensor
    unsigned char buffer[2];
    unsigned short d;
    double temperature;
 
-   Read(T_STATUS, buffer, REG_TEMPERATURE, 2);
+   int status = Read(T_STATUS, buffer, REG_TEMPERATURE, sizeof(buffer));
 
    d = (static_cast < unsigned int >(buffer[1]) << 8) +buffer[0];
-   temperature = ((d >> 3) & 0x0FFF) * 0.0625;
+   this->fTemperature = ((d >> 3) & 0x0FFF) * 0.0625;
 
-   return temperature;
+   return status;
 }
 
 /*------------------------------------------------------------------*/
