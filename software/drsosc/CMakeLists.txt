@@ -16,20 +16,20 @@ set(LIBSRC
    ../mxml/strlcpy.cxx)
 
 set(SRC
-   ConfigDialog
-   DOFrame
-   DOScreen
+   ConfigDialog.cpp
+   DOFrame.cpp
+   DOScreen.cpp
    DRSOsc.cpp
-   MeasureDialog
-   Measurement
-   Osci
-   EPThread
-   DisplayDialog
-   InfoDialog
-   AboutDialog
-   TriggerDialog
-   rb
-   main)
+   MeasureDialog.cpp
+   Measurement.cpp
+   Osci.cpp
+   EPThread.cpp
+   DisplayDialog.cpp
+   InfoDialog.cpp
+   AboutDialog.cpp
+   TriggerDialog.cpp
+   rb.cpp
+   main.cpp)
 
 add_executable(drsosc ${SRC} ${LIBSRC})
 
