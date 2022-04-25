@@ -12,7 +12,7 @@
 
 ```git clone https://bitbucket.org/ritt/drs4eb.git --recursive```
 
-* Install wxWidgets from https://www.wxwidgets.org/ (only if DRSOsc program is needed)
+* Install wxWidgets from https://www.wxwidgets.org/ (only if DRSOsc program is needed). Make sure the ``wx-config`` tool is working.
 
 * Build executables:
 
