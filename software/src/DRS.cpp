@@ -322,7 +322,7 @@ DRS::DRS()
             usb_interface->usb_type = 1;        // USB 1.1
             fBoard[fNumberOfBoards] = new DRSBoard(usb_interface, usb_slot++);
             if (!fBoard[fNumberOfBoards]->HasCorrectFirmware())
-               sprintf(fError, "Wrong firmware version: board has %d, required is %d. Board may not work correctly.\n",
+               snprintf(fError, sizeof(fError), "Wrong firmware version: board has %d, required is %d. Board may not work correctly.\n",
                        fBoard[fNumberOfBoards]->GetFirmwareVersion(),
                        fBoard[fNumberOfBoards]->GetRequiredFirmwareVersion());
             fNumberOfBoards++;
@@ -350,7 +350,7 @@ DRS::DRS()
             usb_interface->usb_type = 2;        // USB 2.0
             fBoard[fNumberOfBoards] = new DRSBoard(usb_interface, usb_slot++);
             if (!fBoard[fNumberOfBoards]->HasCorrectFirmware())
-               sprintf(fError, "Wrong firmware version: board has %d, required is %d. Board may not work correctly.\n",
+               snprintf(fError, sizeof(fError), "Wrong firmware version: board has %d, required is %d. Board may not work correctly.\n",
                       fBoard[fNumberOfBoards]->GetFirmwareVersion(),
                       fBoard[fNumberOfBoards]->GetRequiredFirmwareVersion());
             fNumberOfBoards++;
@@ -4893,7 +4893,7 @@ DRSBoard::TimeData * DRSBoard::GetTimeCalibration(unsigned int chipIndex, bool r
       if (i <= 499 || (i >= 501 && i <= 999) || (i >= 1001 && i <= 1499) || (i >= 1501 && i <= 1999) || 
           (i >= 2001 && i <= 2499) || i >= 2501)
          continue;
-      sprintf(fileName, "%s/board%d/TimeCalib_board%d_chip%d_%dMHz.xml", fCalibDirectory, fBoardSerialNumber,
+      snprintf(fileName, sizeof(fileName), "%s/board%d/TimeCalib_board%d_chip%d_%dMHz.xml", fCalibDirectory, fBoardSerialNumber,
               fBoardSerialNumber, chipIndex, i);
       rootNode = mxml_parse_file(fileName, error, sizeof(error), NULL);
       if (rootNode == NULL)
@@ -4925,8 +4925,7 @@ DRSBoard::TimeData * DRSBoard::GetTimeCalibration(unsigned int chipIndex, bool r
 
 void DRSBoard::SetCalibrationDirectory(const char *calibrationDirectoryPath)
 {
-   strncpy(fCalibDirectory, calibrationDirectoryPath, strlen(calibrationDirectoryPath));
-   fCalibDirectory[strlen(calibrationDirectoryPath)] = 0;
+   strlcpy(fCalibDirectory, calibrationDirectoryPath, sizeof(fCalibDirectory));
 };
 
 /*------------------------------------------------------------------*/
@@ -6220,12 +6219,12 @@ bool ResponseCalibration::WriteCalibrationV3(unsigned int chipIndex)
 
    // Open File
    fBoard->GetCalibrationDirectory(strt);
-   sprintf(str, "%s/board%d", strt, fBoard->GetBoardSerialNumber());
+   snprintf(str, sizeof(str), "%s/board%d", strt, fBoard->GetBoardSerialNumber());
    if (MakeDir(str) == -1) {
       printf("Error: Cannot create directory \"%s\"\n", str);
       return false;
    }
-   sprintf(str, "%s/board%d/ResponseCalib_board%d_chip%d_%dMHz.bin", strt, fBoard->GetBoardSerialNumber(),
+   snprintf(str, sizeof(str), "%s/board%d/ResponseCalib_board%d_chip%d_%dMHz.bin", strt, fBoard->GetBoardSerialNumber(),
            fBoard->GetBoardSerialNumber(), chipIndex, static_cast < int >(fBoard->GetNominalFrequency() * 1000));
    fCalibFile = fopen(str, "wb");
    if (fCalibFile == NULL) {
@@ -6279,12 +6278,12 @@ bool ResponseCalibration::WriteCalibrationV4(unsigned int chipIndex)
 
    // Open File
    fBoard->GetCalibrationDirectory(strt);
-   sprintf(str, "%s/board%d", strt, fBoard->GetBoardSerialNumber());
+   snprintf(str, sizeof(str), "%s/board%d", strt, fBoard->GetBoardSerialNumber());
    if (MakeDir(str) == -1) {
       printf("Error: Cannot create directory \"%s\"\n", str);
       return false;
    }
-   sprintf(str, "%s/board%d/ResponseCalib_board%d_chip%d_%dMHz.bin", strt, fBoard->GetBoardSerialNumber(),
+   snprintf(str, sizeof(str), "%s/board%d/ResponseCalib_board%d_chip%d_%dMHz.bin", strt, fBoard->GetBoardSerialNumber(),
            fBoard->GetBoardSerialNumber(), chipIndex, static_cast < int >(fBoard->GetNominalFrequency() * 1000));
    fCalibFile = fopen(str, "wb");
    if (fCalibFile == NULL) {
@@ -7233,7 +7232,7 @@ bool ResponseCalibration::ReadCalibrationV3(unsigned int chipIndex)
    fCalibrationData[chipIndex] = NULL;
 
    fBoard->GetCalibrationDirectory(calibDir);
-   sprintf(fileName, "%s/board%d/ResponseCalib_board%d_chip%d_%dMHz.bin", calibDir,
+   snprintf(fileName, sizeof(fileName), "%s/board%d/ResponseCalib_board%d_chip%d_%dMHz.bin", calibDir,
            fBoard->GetBoardSerialNumber(), fBoard->GetBoardSerialNumber(), chipIndex,
            static_cast < int >(fBoard->GetNominalFrequency() * 1000));
 
@@ -7391,7 +7390,7 @@ bool ResponseCalibration::ReadCalibrationV4(unsigned int chipIndex)
    // Read Response Calibration
 
    fBoard->GetCalibrationDirectory(calibDir);
-   sprintf(fileName, "%s/board%d/ResponseCalib_board%d_chip%d_%dMHz.bin", calibDir,
+   snprintf(fileName, sizeof(fileName), "%s/board%d/ResponseCalib_board%d_chip%d_%dMHz.bin", calibDir,
            fBoard->GetBoardSerialNumber(), fBoard->GetBoardSerialNumber(), chipIndex,
            static_cast < int >(fBoard->GetNominalFrequency() * 1000));
 

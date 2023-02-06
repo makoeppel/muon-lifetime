@@ -8,9 +8,9 @@ set(SRC
    ../src/DRS.cpp
    ../src/averager.cpp
    ../src/musbstd.c
-   ../mxml/mxml.cxx
-   ../mxml/strlcpy.cxx)
-   
+   ../src/strlcpy.cxx
+   ../mxml/mxml.cxx)
+
 add_executable(drscl ${SRC} drscl.cpp)
 add_executable(drs_exam ${SRC} drs_exam.cpp)
 add_executable(drs_exam_multi ${SRC} drs_exam_multi.cpp)

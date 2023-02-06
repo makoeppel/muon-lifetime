@@ -12,8 +12,8 @@ set(LIBSRC
    ../src/DRS.cpp
    ../src/averager.cpp
    ../src/musbstd.c
-   ../mxml/mxml.cxx
-   ../mxml/strlcpy.cxx)
+   ../src/strlcpy.cxx
+   ../mxml/mxml.cxx)
 
 set(SRC
    ConfigDialog.cpp
