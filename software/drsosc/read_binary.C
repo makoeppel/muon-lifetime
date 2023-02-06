@@ -102,14 +102,14 @@ void decode(const char *filename) {
    
    // define the rec tree
    TTree *rec = new TTree("rec","rec");
-   rec->Branch("t1", time[0]     ,"t1[1024]/D");  
-   rec->Branch("t2", time[1]     ,"t2[1024]/D");  
-   rec->Branch("t3", time[2]     ,"t3[1024]/D");  
-   rec->Branch("t4", time[3]     ,"t4[1024]/D");  
-   rec->Branch("w1", waveform[0] ,"w1[1024]/D");
-   rec->Branch("w2", waveform[1] ,"w2[1024]/D");
-   rec->Branch("w3", waveform[2] ,"w3[1024]/D");
-   rec->Branch("w4", waveform[3] ,"w4[1024]/D");
+   rec->Branch("t1", time[0][0]     ,"t1[1024]/D");
+   rec->Branch("t2", time[0][1]     ,"t2[1024]/D");
+   rec->Branch("t3", time[0][2]     ,"t3[1024]/D");
+   rec->Branch("t4", time[0][3]     ,"t4[1024]/D");
+   rec->Branch("w1", waveform[0][0] ,"w1[1024]/D");
+   rec->Branch("w2", waveform[0][1] ,"w2[1024]/D");
+   rec->Branch("w3", waveform[0][2] ,"w3[1024]/D");
+   rec->Branch("w4", waveform[0][3] ,"w4[1024]/D");
    
    // create canvas
    TCanvas *c1 = new TCanvas();
