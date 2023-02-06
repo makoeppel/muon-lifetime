@@ -4932,8 +4932,7 @@ void DRSBoard::SetCalibrationDirectory(const char *calibrationDirectoryPath)
 
 void DRSBoard::GetCalibrationDirectory(char *calibrationDirectoryPath)
 {
-   strncpy(calibrationDirectoryPath, fCalibDirectory, strlen(fCalibDirectory));
-   calibrationDirectoryPath[strlen(fCalibDirectory)] = 0;
+   strlcpy(calibrationDirectoryPath, fCalibDirectory, sizeof(fCalibDirectory));
 };
 
 /*------------------------------------------------------------------*/
