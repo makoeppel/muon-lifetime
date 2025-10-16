@@ -1,5 +1,7 @@
 # README #
 
+This is a fork from https://bitbucket.org/ritt/drs4eb/
+
 ### DRS4 Evaluation Board firmware and software ###
 
 * VHDL firmware for Xilinx ISE
