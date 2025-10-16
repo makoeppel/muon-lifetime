@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.0)
 execute_process(COMMAND wx-config --cxxflags OUTPUT_VARIABLE WX_CXXFLAGS)
 separate_arguments(WX_CXXFLAGS UNIX_COMMAND ${WX_CXXFLAGS})
 execute_process(COMMAND wx-config --libs OUTPUT_VARIABLE WX_LIBS)
-string(STRIP ${WX_LIBS} WX_LIBS)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 find_package(libusb-1.0 REQUIRED)

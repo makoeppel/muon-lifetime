@@ -13,6 +13,7 @@
 ```git clone https://bitbucket.org/ritt/drs4eb.git --recursive```
 
 * Install wxWidgets from https://www.wxwidgets.org/ (only if DRSOsc program is needed). Make sure the ``wx-config`` tool is working.
+For MacOS one can use [homebrew](https://brew.sh/) to install wxWidgets: `brew instgall wxwidgets`.
 
 * Build executables:
 
@@ -27,7 +28,7 @@ $ make
 * Build "drscl" program only:
 
 ``` 
-$ makde drscl
+$ make drscl
 ```
 
 ### Contact ###
