@@ -98,7 +98,7 @@ int init_drs4(DRS& drs) {
     board->SetFrequency(5, true);
 
     /* enable transparent mode needed for analog trigger */
-    board->SetTranspMode(1);
+    board->SetTranspMode(0);
 
     /* set input range to -0.5V ... +0.5V */
     board->SetInputRange(0);
@@ -117,13 +117,13 @@ int init_drs4(DRS& drs) {
         board->EnableTrigger(0, 1);           // lemo off, analog trigger on
         board->SetTriggerConfig(1);           // use CH1 as source
     }
-    board->SetTriggerLevel(0.025);            // 0.025 V
+    board->SetTriggerLevel(-0.150);            // 0.025 V
     board->SetTriggerPolarity(false);        // positive edge
 
     /* use following lines to set individual trigger levels */
-    //board->SetIndividualTriggerLevel(1, 0.1);
-    //board->SetIndividualTriggerLevel(2, 0.2);
-    //board->SetIndividualTriggerLevel(3, 0.3);
+    board->SetIndividualTriggerLevel(1, -0.150);
+    board->SetIndividualTriggerLevel(2, -0.132);
+    board->SetIndividualTriggerLevel(3, -0.05);
     //board->SetIndividualTriggerLevel(4, 0.4);
     //board->SetTriggerSource(15);
 
@@ -191,35 +191,32 @@ int read_stream_thread(void*) {
         board->StartDomino();
 
         /* wait for trigger */
-        printf("Waiting for trigger...\n");
+        //printf("Waiting for trigger...\n");
 
         while (board->IsBusy());
 
         /* read all waveforms */
         board->TransferWaves(0, 8);
 
-        /* read time (X) array of first channel in ns */
-        board->GetTime(0, 0, board->GetTriggerCell(0), time_array[0]);
-
-        /* decode waveform (Y) array of first channel in mV */
-        board->GetWave(0, 0, wave_array[0]);
-
         /* read time (X) array of second channel in ns
+        decode waveform (Y) array of first channel in mV
         Note: On the evaluation board input #1 is connected to channel 0 and 1 of
         the DRS chip, input #2 is connected to channel 2 and 3 and so on. So to
         get the input #2 we have to read DRS channel #2, not #1. */
+        board->GetTime(0, 0, board->GetTriggerCell(0), time_array[0]);
+        board->GetWave(0, 0, wave_array[0]);
         board->GetTime(0, 2, board->GetTriggerCell(0), time_array[1]);
-
-        /* decode waveform (Y) array of second channel in mV */
         board->GetWave(0, 2, wave_array[1]);
+        board->GetTime(0, 4, board->GetTriggerCell(0), time_array[2]);
+        board->GetWave(0, 4, wave_array[2]);
 
         /* Save waveform: X=time_array[i], Yn=wave_array[n][i] */
-        printf("Event ----------------------\n  t1[ns]  u1[mV]  t2[ns] u2[mV]\n");
-        for (int i = 0; i < board->GetChannelDepth(); i++)
-            printf("%7.3f %7.1f %7.3f %7.1f\n", time_array[0][i], wave_array[0][i], time_array[1][i], wave_array[1][i]);
+        //printf("Event ----------------------\n  t1[ns]  u1[mV]  t2[ns] u2[mV]\n");
+        //for (int i = 0; i < board->GetChannelDepth(); i++)
+        //    printf("%7.3f %7.1f %7.3f %7.1f\n", time_array[0][i], wave_array[0][i], time_array[1][i], wave_array[1][i]);
 
         /* print some progress indication */
-        printf("\rEvent read successfully %i\n", board->GetNumberOfChannels());
+        //printf("\rEvent read successfully %i\n", board->GetNumberOfChannels());
 
         // send time stamp data to MIDAS
         int idx = 0;
