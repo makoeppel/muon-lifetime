@@ -45,93 +45,6 @@ class Event:
     BANK_FLAG_32BIT = 1 << 4
     BANK_FLAG_64BIT_ALIGNED = 1 << 5
 
-
-def _u16_le(buf: memoryview, off: int) -> Tuple[int, int]:
-    return struct.unpack_from("<H", buf, off)[0], off + 2
-
-def _u32_le(buf: memoryview, off: int) -> Tuple[int, int]:
-    return struct.unpack_from("<I", buf, off)[0], off + 4
-
-
-def parse_midas_event(raw: bytes) -> Event:
-    """
-    Parse one MIDAS event from raw bytes received from a MIDAS buffer.
-    Assumes little-endian encoding (typical on x86).
-    """
-    mv = memoryview(raw)
-    off = 0
-
-    event_id, off = _u16_le(mv, off)
-    trigger_mask, off = _u16_le(mv, off)
-    serial_number, off = _u32_le(mv, off)
-    time_stamp, off = _u32_le(mv, off)
-    data_size, off = _u32_le(mv, off)
-
-    # event header is 16 bytes; next is event data
-    data_end = off + data_size
-    if data_end > len(mv):
-        raise ValueError(f"Bad event: data_size={data_size} exceeds buffer length={len(mv)}")
-
-    ev = Event(
-        event_id=event_id,
-        trigger_mask=trigger_mask,
-        serial_number=serial_number,
-        time_stamp=time_stamp,
-        data_size=data_size,
-        banks=[],
-    )
-
-    # BOR/EOR/message events often don't have standard bank headers
-    if event_id in (Event.EVENT_ID_BOR, Event.EVENT_ID_EOR, Event.EVENT_ID_MESSAGE):
-        return ev
-
-    # Bank header (matches your file-reader C++ logic)
-    all_bank_size, off = _u32_le(mv, off)
-    bank_flags, off = _u32_le(mv, off)
-    ev.all_bank_size = all_bank_size
-    ev.bank_flags = bank_flags
-
-    # The remaining bytes should be all_bank_size
-    if (data_end - off) != all_bank_size:
-        raise ValueError(f"Bad event: remaining={(data_end-off)} != all_bank_size={all_bank_size}")
-
-    # Parse banks until we consume the event data
-    while off < data_end:
-        # bank name: 4 bytes
-        name = bytes(mv[off:off+4]).decode("ascii", "replace")
-        off += 4
-
-        if bank_flags == Event.BANK_FLAG_VERSION:
-            # 16-bit type/size
-            btype, off = _u16_le(mv, off)
-            bsize, off = _u16_le(mv, off)
-        elif bank_flags == (Event.BANK_FLAG_VERSION | Event.BANK_FLAG_32BIT):
-            btype, off = _u32_le(mv, off)
-            bsize, off = _u32_le(mv, off)
-        elif bank_flags == (Event.BANK_FLAG_VERSION | Event.BANK_FLAG_32BIT | Event.BANK_FLAG_64BIT_ALIGNED):
-            btype, off = _u32_le(mv, off)
-            bsize, off = _u32_le(mv, off)
-            off += 4  # reserved
-        else:
-            raise NotImplementedError(f"Unsupported bank_flags=0x{bank_flags:08X}")
-
-        if off + bsize > data_end:
-            raise ValueError(f"Bad bank {name}: size={bsize} exceeds event boundary")
-
-        data_view = mv[off:off+bsize]
-        off += bsize
-
-        ev.banks.append(Bank(name=name, type=btype, data=data_view))
-
-        # 64-bit alignment padding
-        if bank_flags & Event.BANK_FLAG_64BIT_ALIGNED:
-            pad = off % 8
-            if pad:
-                off += (8 - pad)
-
-    return ev
-
-
 # ----------------------------
 # Bank decoding helpers
 # ----------------------------
@@ -173,12 +86,10 @@ class EventDumpModule:
         print(f"[{self.name}] EndRun {run_number}")
 
     def analyze_event(self, run_number: int, event: Event) -> None:
-        if event.banks:
-            banks = ", ".join(f"{b.name}(type={b.type},size={b.size})" for b in event.banks)
-        else:
-            banks = "(no banks)"
-        print(f"[{self.name}] run={run_number} id=0x{event.event_id:04X} ser={event.serial_number} {banks}")
 
+        for bank_name, bank in event.banks.items():
+            print(event)
+            print(f"[{bank_name}] run={run_number} id=0x{event.header.event_id:04X} ser={event.header.serial_number}")
 
 # ----------------------------
 # Live MIDAS buffer analyzer
@@ -282,18 +193,16 @@ class LiveMidasAnalyzer:
             # You can remove this if you don't care about Begin/End run hooks
             self._check_run_state()
 
-            raw = self.client.receive_event(self.buf_handle, async_flag=True, use_numpy=False)
-            if not raw:
+            event = self.client.receive_event(self.buf_handle, async_flag=True, use_numpy=False)
+            if not event:
                 time.sleep(self.poll_sleep_s)
                 continue
-
-            ev = parse_midas_event(raw)
 
             # If you're not using ODB state, you can set run number from BOR serial, etc.
             runno = self._run_number
 
             for m in self.modules:
-                m.analyze_event(runno, ev)
+                m.analyze_event(runno, event)
 
 
 # ----------------------------

@@ -1,7 +1,7 @@
 import asyncio
 import json
 import time
-import midas
+import midas.client
 from collections import deque
 from dataclasses import dataclass
 from typing import Optional, Dict
@@ -160,14 +160,95 @@ async def midas_reader_task(path: str):
             pass
 
 
+async def midas_online_reader_task():
+    try:
+        while True:
+            event = client.receive_event(buffer_handle, async_flag=False)
+            if event is not None:
+                # Print some information to screen about this event.
+                bank_names = ", ".join(b.name for b in event.banks.values())
+
+            # Talk to midas so it knows we're alive, or can kill us if the user
+            # pressed the "stop program" button.
+            client.communicate(10)
+
+            t_ns = None
+            up = down = block = None
+
+            for bank_name, bank in event.banks.items():
+                if bank_name == "TC00":
+                    t_ns = np.array(bank.data)
+                elif bank_name == "CC00":
+                    up = np.array(bank.data)
+                elif bank_name == "CC01":
+                    down = np.array(bank.data)
+                elif bank_name == "CC02":
+                    block = np.array(bank.data)
+
+            if t_ns is None or up is None or down is None or block is None:
+                await asyncio.sleep(0)
+                continue
+
+            # cut start
+            t_ns = t_ns[100:]
+            up = up[100:]
+            down = down[100:]
+            block = block[100:]
+
+            hit_up    = np.min(up)    <= thresholds["up"]
+            hit_down  = np.min(down)  <= thresholds["down"]
+            hit_block = np.min(block) <= thresholds["block"]
+
+            if not (hit_up or hit_down or hit_block):
+                continue  # skip updating the live waveform
+
+            # Update live waveform snapshot
+            async with state_lock:
+                state.t_ns = t_ns.tolist()
+                state.up = up.tolist()
+                state.down = down.tolist()
+                state.block = block.tolist()
+                state.last_event_serial = int(event.header.serial_number)
+                state.last_update_unix = time.time()
+
+            # Fill rolling amplitude histos (min value is pulse amplitude for negative pulses)
+            amp_up.append(float(np.min(up)))
+            amp_down.append(float(np.min(down)))
+            amp_block.append(float(np.min(block)))
+
+            # Build rolling muon dt histogram (stopping muon selection)
+            hit_up = np.min(up) <= thresholds["up"]
+            hit_down = np.min(down) <= thresholds["down"]
+            hit_block = np.min(block) <= thresholds["block"]
+
+            if hit_up and hit_block and (not hit_down):
+                block_times = find_negative_pulses_times_ns(
+                    block, t_ns, thresholds["block"], min_sep_ns["block"]
+                )
+                dt = pick_stop_and_decay_ns(block_times, dead_time_ns, dt_max_ns)
+                if dt is not None:
+                    muon_dt_ns.append(dt)
+
+            await asyncio.sleep(0)
+    finally:
+        try:
+            mf.close()
+        except Exception:
+            pass
+
+
 # -------------------------
 # FastAPI + UI
 # -------------------------
 
 app = FastAPI()
 
-MIDAS_PATH = "run00053.mid.lz4"
 BASE_DIR = Path(__file__).parent
+
+# MIDAS_PATH = "run00053.mid.lz4"
+client = midas.client.MidasClient("analyzer")
+buffer_handle = client.open_event_buffer("SYSTEM")
+request_id = client.register_event_request(buffer_handle, event_id = 666)
 
 @app.get("/")
 def index():
@@ -175,7 +256,8 @@ def index():
 
 @app.on_event("startup")
 async def startup():
-    asyncio.create_task(midas_reader_task(MIDAS_PATH))
+    #asyncio.create_task(midas_reader_task(MIDAS_PATH))
+    asyncio.create_task(midas_online_reader_task())
     print("Started midas_reader_task()")
 
 @app.websocket("/ws")
@@ -243,12 +325,18 @@ async def ws_endpoint(ws: WebSocket):
         await asyncio.sleep(0.05)
 
 
-def run(path: str, host: str = "0.0.0.0", port: int = 8000):
+def run_file(path: str, host: str = "0.0.0.0", port: int = 8000):
     import uvicorn
     loop = asyncio.get_event_loop()
     loop.create_task(midas_reader_task(path))
     uvicorn.run(app, host=host, port=port, log_level="info")
 
+def run_online(host: str = "0.0.0.0", port: int = 8000):
+    import uvicorn
+    loop = asyncio.get_event_loop()
+    loop.create_task(midas_online_reader_task(path))
+    uvicorn.run(app, host=host, port=port, log_level="info")
 
 if __name__ == "__main__":
-    run(MIDAS_PATH, port=8000)
+    # run_file(MIDAS_PATH, port=8000)
+    run_online(port=8000)
