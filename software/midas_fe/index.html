@@ -1,0 +1,266 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Live MIDAS Waveforms + Histograms</title>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; }
+    .topbar {
+      padding: 10px;
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+      flex-wrap: wrap;
+    }
+    .panel { display: flex; gap: 12px; align-items: center; }
+    .small { color: #555; font-size: 12px; }
+    #content { width: 100vw; height: calc(100vh - 80px); }
+    #plotWave, #plotHist { width: 100%; height: 100%; display: none; }
+    button { cursor: pointer; }
+    input[type=number] { width: 110px; }
+    .tabs button { padding: 6px 10px; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="tabs panel">
+      <button id="tabWave">Waveform</button>
+      <button id="tabHist">Histogram</button>
+    </div>
+
+    <div class="panel">
+      <label>Channel:
+        <select id="channel">
+          <option value="up">up (CC00)</option>
+          <option value="down">down (CC01)</option>
+          <option value="block">block (CC02)</option>
+        </select>
+      </label>
+
+      <label>Threshold (mV):
+        <input id="thr" type="number" step="1" value="-80"/>
+      </label>
+
+      <label>Min sep (ns):
+        <input id="minsep" type="number" step="1" value="50"/>
+      </label>
+
+      <button id="apply">Apply</button>
+    </div>
+
+    <div class="panel">
+      <button id="prevHist">◀ Prev</button>
+      <button id="nextHist">Next ▶</button>
+
+      <label>Histogram:
+        <select id="histSelect">
+          <option value="amp_up">Amplitude: up</option>
+          <option value="amp_down">Amplitude: down</option>
+          <option value="amp_block">Amplitude: block</option>
+          <option value="dt">Muon Δt</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="panel small">
+      <div>Event serial: <span id="ser">-</span></div>
+      <div>Last update: <span id="ts">-</span></div>
+      <div>Rolling N: <span id="nroll">-</span></div>
+      <div>WS: <span id="wsstat">connecting…</span></div>
+    </div>
+  </div>
+
+  <div id="content">
+    <div id="plotWave"></div>
+    <div id="plotHist"></div>
+  </div>
+
+<script>
+  // -----------------------------
+  // WebSocket connection
+  // -----------------------------
+  const ws = new WebSocket(`ws://${location.host}/ws`);
+  const wsStat = document.getElementById("wsstat");
+
+  let paramsInitialized = false;
+
+  ws.onopen = () => {
+    wsStat.textContent = "connected";
+    ws.send(JSON.stringify({type: "hello"}));
+  };
+  ws.onclose = () => wsStat.textContent = "disconnected";
+  ws.onerror = () => wsStat.textContent = "error";
+
+  // -----------------------------
+  // UI elements
+  // -----------------------------
+  const channelSel = document.getElementById("channel");
+  const thrInput = document.getElementById("thr");
+  const minsepInput = document.getElementById("minsep");
+  const histSelect = document.getElementById("histSelect");
+
+  const serSpan = document.getElementById("ser");
+  const tsSpan = document.getElementById("ts");
+  const nrollSpan = document.getElementById("nroll");
+
+  const plotWave = document.getElementById("plotWave");
+  const plotHist = document.getElementById("plotHist");
+
+  // -----------------------------
+  // View switching
+  // -----------------------------
+  let currentView = "wave"; // "wave" or "hist"
+
+  function show(which) {
+    currentView = which;
+    plotWave.style.display = (which === "wave") ? "block" : "none";
+    plotHist.style.display = (which === "hist") ? "block" : "none";
+  }
+  document.getElementById("tabWave").onclick = () => show("wave");
+  document.getElementById("tabHist").onclick = () => show("hist");
+  show("wave");
+
+  // -----------------------------
+  // Histogram navigation
+  // -----------------------------
+  const histKeys = ["amp_up", "amp_down", "amp_block", "dt"];
+  let histIndex = 0;
+
+  function setHistByIndex(i) {
+    histIndex = (i + histKeys.length) % histKeys.length;
+    histSelect.value = histKeys[histIndex];
+    show("hist");
+    render();
+  }
+  document.getElementById("prevHist").onclick = () => setHistByIndex(histIndex - 1);
+  document.getElementById("nextHist").onclick = () => setHistByIndex(histIndex + 1);
+  histSelect.onchange = () => {
+    histIndex = histKeys.indexOf(histSelect.value);
+    show("hist");
+    render();
+  };
+
+  // -----------------------------
+  // Parameter apply
+  // -----------------------------
+  document.getElementById("apply").addEventListener("click", () => {
+    const msg = {
+      type: "set_params",
+      channel: channelSel.value,
+      threshold: parseFloat(thrInput.value),
+      min_sep_ns: parseFloat(minsepInput.value),
+    };
+    ws.send(JSON.stringify(msg));
+  });
+
+    channelSel.addEventListener("change", () => {
+        if (latest) {
+            thrInput.value = latest.thresholds[channelSel.value];
+            minsepInput.value = latest.min_sep_ns[channelSel.value];
+        }
+        render();
+    });
+
+  // -----------------------------
+  // Data + rendering
+  // -----------------------------
+  let latest = null;
+
+  function renderWaveform() {
+    if (!latest) return;
+
+    const ch = channelSel.value;
+    const t = latest.t_ns;
+    const y = latest[ch];
+    const edges = latest.edges[ch] || [];
+    const thr = latest.thresholds[ch];
+
+    const trace = { x: t, y: y, mode: "lines", name: ch };
+    const edgeTrace = { x: edges, y: edges.map(_ => thr), mode: "markers", name: "edges" };
+
+    Plotly.react("plotWave", [trace, edgeTrace], {
+      margin: { t: 20, l: 60, r: 20, b: 50 },
+      xaxis: { title: "time (ns)" },
+      yaxis: { title: "mV", autorange: false, range: [-520, 20] },
+      shapes: [
+        { type: "line", x0: t[0], x1: t[t.length-1], y0: thr, y1: thr, line: { dash: "dot" } }
+      ]
+    });
+  }
+
+  function renderHistogram() {
+    if (!latest) return;
+
+    const which = histSelect.value;
+
+    if (which === "amp_up") {
+      Plotly.react("plotHist", [
+        { x: latest.amp_hist.up, type: "histogram", name: "Amplitude up" }
+      ], {
+        margin: { t: 20, l: 60, r: 20, b: 50 },
+        xaxis: { title: "min amplitude (mV)" },
+        yaxis: { title: "counts" }
+      });
+    } else if (which === "amp_down") {
+      Plotly.react("plotHist", [
+        { x: latest.amp_hist.down, type: "histogram", name: "Amplitude down" }
+      ], {
+        margin: { t: 20, l: 60, r: 20, b: 50 },
+        xaxis: { title: "min amplitude (mV)" },
+        yaxis: { title: "counts" }
+      });
+    } else if (which === "amp_block") {
+      Plotly.react("plotHist", [
+        { x: latest.amp_hist.block, type: "histogram", name: "Amplitude block" }
+      ], {
+        margin: { t: 20, l: 60, r: 20, b: 50 },
+        xaxis: { title: "min amplitude (mV)" },
+        yaxis: { title: "counts" }
+      });
+    } else if (which === "dt") {
+      Plotly.react("plotHist", [
+        { x: latest.dt_hist_us, type: "histogram", name: "Muon Δt (µs)" }
+      ], {
+        margin: { t: 20, l: 60, r: 20, b: 50 },
+        xaxis: { title: "Δt (µs)" },
+        yaxis: { title: "counts" }
+      });
+    }
+  }
+
+  function render() {
+    if (!latest) return;
+
+    serSpan.textContent = latest.last_event_serial;
+    tsSpan.textContent = new Date(latest.last_update_unix * 1000).toLocaleTimeString();
+    nrollSpan.textContent = latest.roll_n;
+
+    if (currentView === "wave") {
+      renderWaveform();
+    } else {
+      renderHistogram();
+    }
+  }
+
+  ws.onmessage = (ev) => {
+    latest = JSON.parse(ev.data);
+
+    // update status text
+    serSpan.textContent = latest.last_event_serial;
+    tsSpan.textContent = new Date(latest.last_update_unix * 1000).toLocaleTimeString();
+    nrollSpan.textContent = latest.roll_n;
+
+    // IMPORTANT: only set the input values once (or if we haven't initialized yet)
+    if (!paramsInitialized && latest.thresholds && latest.min_sep_ns) {
+        thrInput.value = latest.thresholds[channelSel.value];
+        minsepInput.value = latest.min_sep_ns[channelSel.value];
+        paramsInitialized = true;
+    }
+
+    render();
+    };
+</script>
+</body>
+</html>
